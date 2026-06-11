@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="Mac M芯片, VMware, Ubuntu, 网络配置, 故障排查" />
+    <meta name="description" content="Mac M 芯片 VMware Ubuntu 网络配置完全排查指南" />
+    <title>Mac M 芯片 VMware Ubuntu 网络配置踩坑完全指南 - 陆佳艺</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-glass">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">首页</a></li>
+                <li><a href="research.html" class="nav-link">研究</a></li>
+                <li><a href="publication.html" class="nav-link">论文</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Blog Header -->
+    <article class="blog-article">
+        <header class="blog-header">
+            <div class="blog-header-container">
+                <div class="blog-meta">
+                    <span class="blog-category">技术博客</span>
+                    <span class="blog-date">2025年6月</span>
+                    <span class="blog-reading-time">约 15 分钟阅读</span>
+                </div>
+                <h1 class="blog-title">Mac M 芯片 VMware Ubuntu 网络配置踩坑完全指南</h1>
+                <p class="blog-subtitle">从网卡未启用到完全联网的系统性排查方案</p>
+            </div>
+        </header>
+
+        <!-- Blog Content -->
+        <section class="blog-content">
+            <div class="blog-content-container">
+
+                <!-- 前言 -->
+                <div class="blog-section">
+                    <h2 id="intro">前言</h2>
+                    <p>在 Mac M 芯片（Apple Silicon）上使用 VMware 安装 Ubuntu 虚拟机时，网络配置问题是最常见的困扰。本文记录了一次完整的网络故障排查过程，涵盖了从网卡未启用、IPv4 缺失、DNS 未配置到网关不可达的所有常见问题及其解决方案。</p>
+
+                    <div class="blog-callout callout-info">
+                        <div class="callout-icon">💡</div>
+                        <div class="callout-content">
+                            <strong>适用环境：</strong>Mac M1/M2/M3 芯片 + VMware Fusion + Ubuntu 24.04（也适用于其他 Linux 发行版）
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 目录 -->
+                <div class="blog-section">
+                    <h2 id="toc">目录</h2>
+                    <nav class="blog-toc">
+                        <ol>
+                            <li><a href="#problem-1">问题一：网卡未启用</a></li>
+                            <li><a href="#problem-2">问题二：只有 IPv6，缺少 IPv4</a></li>
+                            <li><a href="#problem-3">问题三：DNS 解析失败</a></li>
+                            <li><a href="#problem-4">问题四：网关不可达</a></li>
+                            <li><a href="#solution">终极解决方案：systemd-networkd 配置</a></li>
+                            <li><a href="#conclusion">总结与最佳实践</a></li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <!-- 问题一 -->
+                <div class="blog-section">
+                    <h2 id="problem-1">问题一：网卡未启用</h2>
+
+                    <h3>现象诊断</h3>
+                    <p>首先检查网络接口状态：</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code>ip -a</code></pre>
+                    </div>
+
+                    <p>关键信息分析：</p>
+                    <ul class="blog-list">
+                        <li>❌ 没有 <code class="inline-code">UP</code> 标志</li>
+                        <li>❌ 状态显示 <code class="inline-code">state DOWN</code></li>
+                        <li>❌ 没有 <code class="inline-code">inet</code> IPv4 地址</li>
+                    </ul>
+
+                    <div class="blog-callout callout-warning">
+                        <div class="callout-icon">⚠️</div>
+                        <div class="callout-content">
+                            <strong>结论：</strong>物理网卡未启用，也未获取 IP 地址，机器完全没有网络连接。
+                        </div>
+                    </div>
+
+                    <h3>基础检查清单</h3>
+                    <p>在开始排查之前，请确认虚拟机网络模式设置正确：</p>
+
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>虚拟机平台</th>
+                                    <th>推荐网络模式</th>
+                                    <th>备选方案</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VMware Fusion</td>
+                                    <td>✅ NAT</td>
+                                    <td>桥接（Bridged）</td>
+                                </tr>
+                                <tr>
+                                    <td>VirtualBox</td>
+                                    <td>✅ NAT</td>
+                                    <td>桥接</td>
+                                </tr>
+                                <tr>
+                                    <td>云服务器</td>
+                                    <td>✅ 公网 IP</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 问题二 -->
+                <div class="blog-section">
+                    <h2 id="problem-2">问题二：只有 IPv6，缺少 IPv4</h2>
+
+                    <h3>问题分析</h3>
+                    <p>当网卡成功启用后，执行 <code class="inline-code">ip a</code> 可能看到：</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">text</span>
+                        </div>
+                        <pre><code>enp2s0: UP, LOWER_UP
+    inet6 2001:da8:8006:938:20c:29ff:feef:c80/64
+    inet6 fe80::...
+</code></pre>
+                    </div>
+
+                    <div class="blog-callout callout-danger">
+                        <div class="callout-icon">🔴</div>
+                        <div class="callout-content">
+                            <strong>核心问题：</strong>
+                            <ul>
+                                <li>只有 IPv6 地址，没有 IPv4 地址（如 192.168.x.x）</li>
+                                <li>系统缺少 DHCP 客户端工具（<code class="inline-code">dhclient</code>）</li>
+                                <li>执行 <code class="inline-code">ping 8.8.8.8</code> 会报错：<code class="inline-code">Network is unreachable</code></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>解决方案一：安装 DHCP 客户端（推荐）</h3>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code># 更新包管理器并安装 dhclient
+sudo apt update
+sudo apt install isc-dhcp-client -y
+
+# 使用 dhclient 获取 IPv4 地址
+sudo dhclient enp2s0
+
+# 验证 IP 是否获取成功
+ip a</code></pre>
+                    </div>
+
+                    <p>成功后应该看到类似输出：</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">text</span>
+                        </div>
+                        <pre><code>inet 192.168.1.23/24 brd 192.168.1.255 scope global enp2s0</code></pre>
+                    </div>
+
+                    <h3>解决方案二：重启网络服务</h3>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code># 方法 1：重启 systemd-networkd
+sudo systemctl restart systemd-networkd
+
+# 方法 2：重启 networking 服务
+sudo systemctl restart networking</code></pre>
+                    </div>
+
+                    <div class="blog-callout callout-success">
+                        <div class="callout-icon">✅</div>
+                        <div class="callout-content">
+                            <strong>额外说明：</strong>你的 IPv6 可能是正常工作的。可以测试：<code class="inline-code">ping6 ipv6.google.com</code>。如果成功，说明 IPv6 网络正常，只是 IPv4 未配置。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 问题三 -->
+                <div class="blog-section">
+                    <h2 id="problem-3">问题三：DNS 解析失败</h2>
+
+                    <h3>典型错误信息</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">text</span>
+                        </div>
+                        <pre><code>Temporary failure resolving 'ports.ubuntu.com'</code></pre>
+                    </div>
+
+                    <p>这说明系统无法解析域名，导致：</p>
+                    <ul class="blog-list">
+                        <li>❌ <code class="inline-code">apt update</code> 失败</li>
+                        <li>❌ <code class="inline-code">ping baidu.com</code> 失败</li>
+                        <li>❌ 所有需要域名的操作都失效</li>
+                    </ul>
+
+                    <h3>临时解决方案：手动配置 DNS</h3>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code># 编辑 DNS 配置文件
+sudo nano /etc/resolv.conf
+
+# 添加以下内容：
+nameserver 8.8.8.8
+nameserver 114.114.114.114
+
+# 保存：Ctrl + O → 回车 → Ctrl + X</code></pre>
+                    </div>
+
+                    <h3>测试 DNS</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code>ping baidu.com
+ping google.com</code></pre>
+                    </div>
+                </div>
+
+                <!-- 问题四 -->
+                <div class="blog-section">
+                    <h2 id="problem-4">问题四：网关不可达</h2>
+
+                    <h3>问题现象</h3>
+                    <p>即使有了 IPv4 地址，<code class="inline-code">ping 8.8.8.8</code> 依然失败：</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">text</span>
+                        </div>
+                        <pre><code>From 192.168.1.100 icmp_seq=1 Destination Host Unreachable</code></pre>
+                    </div>
+
+                    <div class="blog-callout callout-warning">
+                        <div class="callout-icon">⚠️</div>
+                        <div class="callout-content">
+                            <strong>原因分析：</strong>默认网关配置错误或不存在。虽然有 IP 地址，但路由未通，数据包无法离开本地网络。
+                        </div>
+                    </div>
+
+                    <h3>诊断步骤</h3>
+
+                    <p><strong>1. 检查路由表</strong></p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code>ip route</code></pre>
+                    </div>
+
+                    <p>正常情况下应看到：</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">text</span>
+                        </div>
+                        <pre><code>default via 192.168.1.1 dev enp2s0
+192.168.1.0/24 dev enp2s0 proto kernel scope link src 192.168.1.100</code></pre>
+                    </div>
+
+                    <p><strong>2. 测试网关连通性</strong></p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code># 测试是否能 ping 通网关
+ping 192.168.1.1
+
+# 查看 ARP 表，确认网关地址
+arp -a</code></pre>
+                    </div>
+
+                    <h3>修复网关配置</h3>
+
+                    <p>如果网关缺失，手动添加：</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code># 删除旧的默认路由（如果存在）
+sudo ip route del default
+
+# 添加正确的默认网关（根据实际情况调整）
+sudo ip route add default via 192.168.1.1
+
+# VMware NAT 模式常见网关：
+# - 192.168.159.2
+# - 192.168.1.1
+# - 192.168.0.1</code></pre>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>测试项</th>
+                                    <th>结果</th>
+                                    <th>说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>ping 192.168.1.1</code></td>
+                                    <td>不通</td>
+                                    <td>网络未真正连接</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ping 8.8.8.8</code></td>
+                                    <td>不通</td>
+                                    <td>网关不可用或外网路由断开</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ip route</code></td>
+                                    <td>有配置</td>
+                                    <td>但可能只是"纸面配置"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 终极解决方案 -->
+                <div class="blog-section">
+                    <h2 id="solution">终极解决方案：systemd-networkd 配置</h2>
+
+                    <p>极简版 Ubuntu（如 Server 版）通常不自带 <code class="inline-code">dhclient</code>、<code class="inline-code">netplan</code> 或 <code class="inline-code">NetworkManager</code>，因此需要使用 <code class="inline-code">systemd-networkd</code> 进行网络配置。</p>
+
+                    <h3>方案一：DHCP 自动获取 IP（推荐）</h3>
+
+                    <p><strong>1. 创建配置文件</strong></p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code># 创建配置目录
+sudo mkdir -p /etc/systemd/network
+
+# 创建网络配置文件
+sudo nano /etc/systemd/network/20-wired.network</code></pre>
+                    </div>
+
+                    <p><strong>2. 写入配置内容</strong></p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">ini</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code>[Match]
+Name=enp2s0
+
+[Network]
+DHCP=ipv4</code></pre>
+                    </div>
+
+                    <p><strong>3. 启用并重启服务</strong></p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code>sudo systemctl enable systemd-networkd
+sudo systemctl restart systemd-networkd
+sudo systemctl restart systemd-resolved</code></pre>
+                    </div>
+
+                    <p><strong>4. 验证网络</strong></p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code>ip a
+ip route
+ping 8.8.8.8
+ping www.baidu.com</code></pre>
+                    </div>
+
+                    <h3>方案二：静态 IP 配置</h3>
+
+                    <p>适用于 VMware NAT 模式或需要固定 IP 的场景：</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">ini</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code>[Match]
+Name=enp2s0
+
+[Network]
+Address=192.168.159.100/24
+Gateway=192.168.159.2
+DNS=8.8.8.8
+DNS=1.1.1.1</code></pre>
+                    </div>
+
+                    <div class="blog-callout callout-warning">
+                        <div class="callout-icon">⚠️</div>
+                        <div class="callout-content">
+                            <strong>重要提示：</strong>
+                            <ul>
+                                <li>静态 IP 地址必须与 VMware 网络设置的网段一致</li>
+                                <li>VMware NAT 模式网关通常是 <code class="inline-code">.2</code>（如 192.168.159.2）</li>
+                                <li>可在 VMware → 偏好设置 → 网络 中查看 NAT 网段</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>共享文件夹配置（额外）</h3>
+                    <p>如果需要在 Mac 和虚拟机之间共享文件：</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code># 挂载 VMware 共享文件夹
+vmhgfs-fuse .host:/ /home/lujiayi/share -o subtype=vmhgfs-fuse,allow_other</code></pre>
+                    </div>
+                </div>
+
+                <!-- 总结 -->
+                <div class="blog-section">
+                    <h2 id="conclusion">总结与最佳实践</h2>
+
+                    <h3>问题排查优先级</h3>
+                    <ol class="blog-list">
+                        <li><strong>网卡状态</strong>：确认网卡是否启用（<code class="inline-code">UP</code> 标志）</li>
+                        <li><strong>IP 地址</strong>：检查是否有 IPv4 地址</li>
+                        <li><strong>DNS 配置</strong>：确认 <code class="inline-code">/etc/resolv.conf</code> 正确</li>
+                        <li><strong>路由网关</strong>：验证默认路由是否存在且可达</li>
+                        <li><strong>物理连接</strong>：确认虚拟机网络模式正确</li>
+                    </ol>
+
+                    <h3>推荐配置方案</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>环境</th>
+                                    <th>推荐方案</th>
+                                    <th>优点</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>桌面版 Ubuntu</td>
+                                    <td>NetworkManager</td>
+                                    <td>图形化配置，简单易用</td>
+                                </tr>
+                                <tr>
+                                    <td>服务器版 Ubuntu</td>
+                                    <td>systemd-networkd</td>
+                                    <td>轻量、稳定、开机自启</td>
+                                </tr>
+                                <tr>
+                                    <td>云服务器</td>
+                                    <td>Netplan + systemd</td>
+                                    <td>标准化配置文件</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>常见坑点总结</h3>
+                    <div class="blog-callout callout-danger">
+                        <div class="callout-icon">🚨</div>
+                        <div class="callout-content">
+                            <ul>
+                                <li><strong>Ubuntu 24.04 默认不带 dhclient</strong>：需手动安装或使用 systemd-networkd</li>
+                                <li><strong>VMware NAT 网段不一致</strong>：静态 IP 必须匹配 VMware 设置</li>
+                                <li><strong>DNS 被覆盖</strong>：某些系统会自动覆盖 <code class="inline-code">/etc/resolv.conf</code>，需使用 <code class="inline-code">systemd-resolved</code></li>
+                                <li><strong>网关地址错误</strong>：VMware NAT 网关通常是 <code class="inline-code">.2</code>，不是 <code class="inline-code">.1</code></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>验证清单</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">bash</span>
+                            <button class="code-copy">复制</button>
+                        </div>
+                        <pre><code># 完整网络验证命令
+ip a                          # 检查 IP 地址
+ip route                      # 检查路由表
+cat /etc/resolv.conf          # 检查 DNS
+ping 192.168.1.1              # 测试网关
+ping 8.8.8.8                  # 测试外网 IP
+ping www.baidu.com            # 测试域名解析
+sudo systemctl status systemd-networkd  # 检查网络服务</code></pre>
+                    </div>
+                </div>
+
+                <!-- 相关资源 -->
+                <div class="blog-section">
+                    <h2 id="resources">相关资源</h2>
+                    <ul class="blog-list">
+                        <li><a href="https://www.freedesktop.org/software/systemd/man/systemd.network.html" target="_blank">systemd.network 官方文档</a></li>
+                        <li><a href="https://netplan.io/" target="_blank">Netplan 官方文档</a></li>
+                        <li><a href="https://docs.vmware.com/en/VMware-Fusion/index.html" target="_blank">VMware Fusion 文档</a></li>
+                        <li><a href="https://ubuntu.com/server/docs" target="_blank">Ubuntu Server 文档</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Blog Footer -->
+        <footer class="blog-footer">
+            <div class="blog-footer-container">
+                <div class="blog-tags">
+                    <span class="tag">VMware</span>
+                    <span class="tag">Ubuntu</span>
+                    <span class="tag">网络配置</span>
+                    <span class="tag">Mac M芯片</span>
+                    <span class="tag">故障排查</span>
+                </div>
+                <div class="blog-nav">
+                    <a href="index.html" class="blog-nav-link">← 返回首页</a>
+                </div>
+            </div>
+        </footer>
+    </article>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p class="footer-text">&copy; 2025 陆佳艺 (Jiayi Lu). 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Enhancements -->
+    <script src="script.js"></script>
+    <script src="blog.js"></script>
+</body>
+</html>

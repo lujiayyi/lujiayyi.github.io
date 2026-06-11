@@ -176,7 +176,7 @@ function initTrajectoryCanvas() {
         context.clearRect(0, 0, width, height);
 
         context.lineWidth = 1.4;
-        context.strokeStyle = "rgba(217, 119, 87, 0.72)";
+        context.strokeStyle = "rgba(136, 155, 216, 0.94)";
         context.beginPath();
 
         points.forEach((point, index) => {
@@ -201,7 +201,7 @@ function initTrajectoryCanvas() {
             const radius = 2 + ((Math.sin(time * 0.001 + index) + 1) * 1.6);
 
             context.beginPath();
-            context.fillStyle = index % 6 === 0 ? "rgba(122, 199, 196, 0.92)" : "rgba(217, 119, 87, 0.76)";
+            context.fillStyle = index % 6 === 0 ? "rgb(160, 213, 227)" : "rgba(182, 175, 233, 0.89)";
             context.arc(x, y, radius, 0, Math.PI * 2);
             context.fill();
         });
@@ -234,7 +234,7 @@ function initGraph() {
 
     const lines = relations.map(([from, to]) => {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("stroke", "rgba(217, 119, 87, 0.22)");
+        line.setAttribute("stroke", "rgba(111, 125, 145, 0.24)");
         line.setAttribute("stroke-width", "1.4");
         line.setAttribute("stroke-linecap", "round");
         line.setAttribute("stroke-dasharray", "5 9");
@@ -326,11 +326,11 @@ function initMercuryBackground() {
         targetY: window.innerHeight * 0.38
     };
     const flowNodes = [
-        { ox: 0.18, oy: 0.22, base: 170, amp: 34, speed: 0.9, color: "212, 215, 218" },
-        { ox: 0.82, oy: 0.2, base: 190, amp: 42, speed: 0.75, color: "180, 188, 195" },
-        { ox: 0.24, oy: 0.72, base: 220, amp: 56, speed: 0.62, color: "140, 150, 158" },
-        { ox: 0.78, oy: 0.74, base: 205, amp: 48, speed: 0.56, color: "120, 129, 138" },
-        { ox: 0.52, oy: 0.42, base: 250, amp: 38, speed: 0.68, color: "236, 224, 214" }
+        { ox: 0.14, oy: 0.18, base: 200, amp: 42, speed: 0.9, color: "86, 118, 255" },
+        { ox: 0.82, oy: 0.18, base: 210, amp: 54, speed: 0.76, color: "72, 207, 255" },
+        { ox: 0.22, oy: 0.74, base: 250, amp: 68, speed: 0.62, color: "142, 104, 255" },
+        { ox: 0.78, oy: 0.74, base: 230, amp: 58, speed: 0.58, color: "58, 232, 194" },
+        { ox: 0.5, oy: 0.42, base: 280, amp: 44, speed: 0.68, color: "255, 255, 255" }
     ];
     const ripples = [];
 
@@ -381,8 +381,9 @@ function initMercuryBackground() {
         context.globalCompositeOperation = "source-over";
 
         const base = context.createLinearGradient(0, 0, width, height);
-        base.addColorStop(0, "rgba(255, 250, 245, 0.32)");
-        base.addColorStop(1, "rgba(243, 236, 228, 0.18)");
+        base.addColorStop(0, "rgba(243, 247, 255, 0.38)");
+        base.addColorStop(0.55, "rgba(229, 236, 248, 0.18)");
+        base.addColorStop(1, "rgba(214, 222, 238, 0.12)");
         context.fillStyle = base;
         context.fillRect(0, 0, width, height);
 
@@ -391,22 +392,22 @@ function initMercuryBackground() {
         flowNodes.forEach((node, index) => {
             const driftX = Math.sin(t * node.speed + index) * node.amp;
             const driftY = Math.cos(t * (node.speed * 0.8) + index * 0.6) * node.amp * 0.7;
-            const mouseDx = (pointer.x - width * node.ox) * 0.05;
-            const mouseDy = (pointer.y - height * node.oy) * 0.035;
+            const mouseDx = (pointer.x - width * node.ox) * 0.12;
+            const mouseDy = (pointer.y - height * node.oy) * 0.1;
             const x = width * node.ox + driftX + mouseDx;
             const y = height * node.oy + driftY + mouseDy;
             const radius = node.base + Math.sin(t * 1.8 + index) * node.amp * 0.55;
-            drawBlob(x, y, radius, node.color, 26);
-            drawBlob(x + mouseDx * 0.35, y + mouseDy * 0.35, radius * 0.48, "255, 255, 255", 16);
+            drawBlob(x, y, radius, node.color, 28);
+            drawBlob(x + mouseDx * 0.42, y + mouseDy * 0.42, radius * 0.52, "255, 255, 255", 18);
         });
 
-        drawBlob(pointer.x * 0.84 + width * 0.08, pointer.y * 0.72 + height * 0.08, 170, "115, 122, 132", 38);
-        drawBlob(pointer.x, pointer.y, 92, "255, 255, 255", 20);
+        drawBlob(pointer.x * 0.8 + width * 0.1, pointer.y * 0.68 + height * 0.1, 240, "92, 122, 255", 42);
+        drawBlob(pointer.x, pointer.y, 130, "255, 255, 255", 22);
 
         ripples.forEach((ripple) => {
             ripple.age += 0.018;
-            const radius = 80 + ripple.age * 280;
-            context.strokeStyle = `rgba(160, 164, 170, ${0.18 * (1 - ripple.age)})`;
+            const radius = 90 + ripple.age * 360;
+            context.strokeStyle = `rgba(118, 154, 255, ${0.2 * (1 - ripple.age)})`;
             context.lineWidth = 20 * (1 - ripple.age * 0.66);
             context.filter = "blur(8px)";
             context.beginPath();
@@ -420,9 +421,11 @@ function initMercuryBackground() {
         }
 
         context.globalCompositeOperation = "screen";
-        const sheen = context.createLinearGradient(pointer.x - 220, pointer.y - 180, pointer.x + 260, pointer.y + 220);
+        const sheen = context.createLinearGradient(pointer.x - 260, pointer.y - 220, pointer.x + 320, pointer.y + 260);
         sheen.addColorStop(0, "rgba(255,255,255,0)");
+        sheen.addColorStop(0.42, "rgba(120, 199, 255, 0.12)");
         sheen.addColorStop(0.5, "rgba(255,255,255,0.24)");
+        sheen.addColorStop(0.58, "rgba(151, 125, 255, 0.12)");
         sheen.addColorStop(1, "rgba(255,255,255,0)");
         context.fillStyle = sheen;
         context.fillRect(0, 0, width, height);
@@ -435,8 +438,38 @@ function initMercuryBackground() {
     requestAnimationFrame(animate);
 }
 
+function initContactCopy() {
+    const copyButton = document.querySelector(".copy-contact-button");
+    if (!copyButton) {
+        return;
+    }
+
+    const defaultLabel = copyButton.textContent.trim();
+    const copyText = copyButton.dataset.copyContact;
+
+    copyButton.addEventListener("click", async () => {
+        if (!copyText) {
+            return;
+        }
+
+        try {
+            await navigator.clipboard.writeText(copyText);
+            copyButton.textContent = "已复制";
+            window.setTimeout(() => {
+                copyButton.textContent = defaultLabel;
+            }, 1400);
+        } catch (error) {
+            copyButton.textContent = "复制失败";
+            window.setTimeout(() => {
+                copyButton.textContent = defaultLabel;
+            }, 1400);
+        }
+    });
+}
+
 initReveal();
 initAgentNetwork();
 initTrajectoryCanvas();
 initGraph();
 initMercuryBackground();
+initContactCopy();
