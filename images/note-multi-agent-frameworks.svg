@@ -1,0 +1,48 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1200" height="760" rx="36" fill="#F7FAFC"/>
+<rect x="36" y="36" width="1128" height="688" rx="28" fill="white" stroke="#D7E0EA"/>
+<text x="80" y="108" fill="#121A24" font-family="Manrope, Arial, sans-serif" font-size="34" font-weight="700">Multi-Agent Collaboration Framework</text>
+<text x="80" y="144" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">From role decomposition to execution governance</text>
+
+<rect x="90" y="214" width="220" height="84" rx="24" fill="#EEF5FF" stroke="#D9E5F2"/>
+<text x="154" y="248" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16" font-weight="600">ROLE 01</text>
+<text x="148" y="280" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">Planner</text>
+
+<rect x="490" y="214" width="220" height="84" rx="24" fill="#EEF7F8" stroke="#D6E7E9"/>
+<text x="554" y="248" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16" font-weight="600">ROLE 02</text>
+<text x="548" y="280" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">Executors</text>
+
+<rect x="890" y="214" width="220" height="84" rx="24" fill="#F2F3FF" stroke="#DEE1F8"/>
+<text x="954" y="248" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16" font-weight="600">ROLE 03</text>
+<text x="951" y="280" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">Reviewer</text>
+
+<rect x="420" y="354" width="360" height="112" rx="28" fill="#F7FAFD" stroke="#D8E2EE"/>
+<text x="496" y="394" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16" font-weight="600">GLOBAL CONTROL</text>
+<text x="485" y="432" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="700">Orchestrator / Supervisor</text>
+
+<path d="M310 256H490" stroke="#A9B7C7" stroke-width="4" stroke-dasharray="8 10"/>
+<path d="M710 256H890" stroke="#A9B7C7" stroke-width="4" stroke-dasharray="8 10"/>
+<path d="M600 298V354" stroke="#A9B7C7" stroke-width="4"/>
+<path d="M200 298L490 354" stroke="#C4D0DD" stroke-width="3"/>
+<path d="M1000 298L710 354" stroke="#C4D0DD" stroke-width="3"/>
+
+<rect x="90" y="520" width="240" height="140" rx="24" fill="#FBFCFE" stroke="#E0E6EE"/>
+<text x="116" y="558" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="700">Workflow mode</text>
+<text x="116" y="592" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">deterministic steps</text>
+<text x="116" y="620" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">strong SOP / stable routing</text>
+
+<rect x="360" y="520" width="240" height="140" rx="24" fill="#FBFCFE" stroke="#E0E6EE"/>
+<text x="386" y="558" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="700">P&amp;E mode</text>
+<text x="386" y="592" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">planner decomposes tasks</text>
+<text x="386" y="620" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">executors solve in parallel</text>
+
+<rect x="630" y="520" width="220" height="140" rx="24" fill="#FBFCFE" stroke="#E0E6EE"/>
+<text x="656" y="558" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="700">Traceability</text>
+<text x="656" y="592" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">state, logs, trace ID</text>
+<text x="656" y="620" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">observable execution</text>
+
+<rect x="880" y="520" width="230" height="140" rx="24" fill="#FBFCFE" stroke="#E0E6EE"/>
+<text x="906" y="558" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="700">Budget control</text>
+<text x="906" y="592" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">token quota, retry,</text>
+<text x="906" y="620" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">timeout, circuit breaker</text>
+</svg>

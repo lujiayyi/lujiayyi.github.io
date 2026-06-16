@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="大模型测评学习笔记" />
+    <title>大模型测评 | Learning Note | Jiayi Lu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="portfolio.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="portfolio-body bg-paper text-ink antialiased">
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+    <main class="detail-main">
+        <div class="mx-auto max-w-7xl px-6 lg:px-10">
+            <section class="detail-hero">
+                <a href="index.html#blog" class="back-link">返回学习笔记</a>
+                <p class="eyebrow">LEARNING NOTE 01 · LLM EVALUATION</p>
+                <h1 class="section-title">大模型测评：从“评测什么”到“如何设计可信评测”</h1>
+                <p class="detail-summary">
+                    这篇笔记记录的是我目前对大模型评测的一点整理。越往后做项目，越能感觉到：如果没有一套像样的评测框架，模型看起来再强，最后也很难判断它到底哪里可靠、哪里只是碰巧答对。
+                </p>
+                <div class="detail-tags">
+                    <span>What to evaluate</span>
+                    <span>Where to evaluate</span>
+                    <span>How to evaluate</span>
+                    <span>Robustness</span>
+                    <span>Trustworthy Evaluation</span>
+                </div>
+            </section>
+
+            <section class="detail-layout">
+                <article class="glass-panel detail-panel note-article">
+                    <section class="note-section">
+                        <h2>1. 为什么评测重要</h2>
+                        <p>
+                            我现在比较认同的一种看法是，评测的意义首先不在排名，而在“去幻觉化”我们对模型能力的想象。很多时候，模型给出的回答很像理解了问题，但再往下追问，就会发现它只是命中了训练分布里熟悉的表达。
+                        </p>
+                        <p>
+                            评测的第二层意义在于，它直接关系到系统设计。无论是做对话式产品、RAG 系统还是 Agent 工作流，如果不知道模型在什么条件下会失稳，很多交互细节其实是没法认真设计的。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>2. 评测框架：评测什么、在哪评测、如何评测</h2>
+                        <p>
+                            我最喜欢的一点，是把 LLM 评测明确拆成三个问题：
+                        </p>
+                        <ul class="detail-list">
+                            <li>评测什么：能力项、任务类型、失败模式。</li>
+                            <li>在哪评测：使用什么 benchmark、数据集和场景。</li>
+                            <li>如何评测：自动指标、人工评测、混合协议如何搭配。</li>
+                        </ul>
+                        <p>
+                            这个拆法的好处在于，它把“评测”从一个分数导向的问题，重新拉回成了系统设计问题。很多争论其实不是模型谁强谁弱，而是大家根本没有在评同一件事。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>3. 评测什么：能力比单一任务更重要</h2>
+                        <p>
+                            真正值得关注的不是某个孤立任务的分数，而是能力结构本身。比如语言理解、推理、真实性、鲁棒性、领域能力、Agent 行为，这些维度彼此相关，但又不能互相替代。
+                        </p>
+                        <p>
+                            这点对我做项目时很有帮助。如果系统本身是 RAG，就应该重点看证据依赖、事实一致性和长上下文稳定性；如果是 Agent，就不能只看回答对不对，而要看工具调用、步骤规划和任务完成过程。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>4. 在哪评测：benchmark 选择会塑造结论</h2>
+                        <p>
+                            benchmark 的选择几乎会直接塑造我们对模型的结论。通用 benchmark 更像能力体检，适合快速观察整体水平；具体场景 benchmark 更像压力测试，能更早暴露系统在真实使用里的问题。
+                        </p>
+                        <p>
+                            如果以后自己搭评测集，我大概会保留两层：
+                        </p>
+                        <ul class="detail-list">
+                            <li>通用能力层：语言理解、推理、鲁棒性。</li>
+                            <li>系统场景层：RAG 证据质量、Agent 工具调用、长对话一致性。</li>
+                        </ul>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>5. 如何评测：自动评测快，人工评测更接近真实质量</h2>
+                        <p>
+                            自动评测的优势很明显：便宜、快、可重复，适合做回归检查。但一旦进入长文本、复杂对话、工具使用或者高风险回答场景，仅靠自动分数通常是不够的。
+                        </p>
+                        <p>
+                            我现在更倾向于把自动评测当作筛查工具，而把人工评测当作质量判断的关键环节。前者适合看趋势，后者才更接近真实使用中“这段回答到底靠不靠谱”。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>6. 我记录下来的几个高价值挑战</h2>
+                        <ul class="detail-list">
+                            <li>鲁棒性：模型对 prompt 干扰和格式变化是否敏感。</li>
+                            <li>动态演化：模型能力在迭代，训练污染也在变化，评测不能静态不变。</li>
+                            <li>可信评测：设计出的基准和指标本身是否可靠。</li>
+                            <li>统一评测：如何让能力评测和下游系统评测真正连起来。</li>
+                        </ul>
+                        <p>
+                            这些问题对我尤其重要，因为我更关心系统在真实任务里是否稳定，而不是一个裸模型在公开榜单上的位置。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>7. 对我自己的实践启发</h2>
+                        <ul class="detail-list">
+                            <li>先定义失败模式，再定义指标，而不是反过来。</li>
+                            <li>RAG 系统应增加事实性、证据引用与检索依赖分析。</li>
+                            <li>Agent 系统应增加任务完成率、工具调用正确率和长流程稳定性评测。</li>
+                            <li>对话系统需要正式的人评流程，而不是把“看起来像对”当成通过标准。</li>
+                        </ul>
+                    </section>
+                </article>
+
+                <aside class="glass-panel detail-panel">
+                    <div class="detail-image-shell">
+                        <img src="images/note-llm-evaluation.svg" alt="LLM evaluation framework diagram" />
+                    </div>
+                    <h3>我会继续补充的部分</h3>
+                    <ul class="detail-list">
+                        <li>聊天系统、RAG 系统、Agent 系统的分场景评测清单。</li>
+                        <li>人工评测 rubric 设计：帮助性、事实性、稳定性与风险暴露。</li>
+                        <li>适合课程项目和研究原型的轻量回归评测流程。</li>
+                    </ul>
+                    <p>
+                        这篇笔记更像一份阶段性整理。我希望后续把它继续发展成一套真正可复用的评测工作流，而不是只停留在概念分类。
+                    </p>
+                </aside>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

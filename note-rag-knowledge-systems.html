@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="RAG 与知识增强学习笔记" />
+    <title>RAG 与知识增强 | Jiayi Lu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="portfolio.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="portfolio-body bg-paper text-ink antialiased">
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+    <main class="detail-main">
+        <div class="mx-auto max-w-7xl px-6 lg:px-10">
+            <section class="detail-hero">
+                <a href="index.html#blog" class="back-link">返回学习笔记</a>
+                <p class="eyebrow">LEARNING NOTE 03 · RAG &amp; KNOWLEDGE ENHANCEMENT</p>
+                <h1 class="section-title">RAG 与知识增强</h1>
+                <p class="detail-summary">
+                    这篇笔记写的是我目前对 RAG 的一个基本判断：真正可用的知识增强系统，不是把模型接上向量库就结束了，而是要把检索、证据选择、生成、验证和反馈当成同一条链路来设计。
+                </p>
+                <div class="detail-tags">
+                    <span>BM25</span>
+                    <span>Dense Retrieval</span>
+                    <span>Hybrid Retrieval</span>
+                    <span>Rerank</span>
+                    <span>Faithfulness</span>
+                </div>
+            </section>
+
+            <section class="detail-layout">
+                <article class="glass-panel detail-panel note-article">
+                    <section class="note-section">
+                        <h2>1. 为什么我会把 RAG 看成“系统问题”</h2>
+                        <p>
+                            最开始接触 RAG 时，很容易把它理解成一条很直接的管线：提问、检索、拼接上下文、生成答案。但一旦真的开始做项目，就会发现它最难的地方并不是链路能否跑通，而是检索回来的内容到底能不能支撑一个可信答案。
+                        </p>
+                        <p>
+                            所以在我看来，RAG 本质上更接近一个系统问题。它同时涉及召回覆盖、证据质量、生成忠实性、知识更新和反馈回流，而不是只追求“回答看起来挺顺”的表面效果。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>2. 一条典型 RAG 链路由什么构成</h2>
+                        <ul class="detail-list">
+                            <li>文档整理与切分：决定知识会以什么粒度进入系统。</li>
+                            <li>Embedding 与索引：决定向量检索的语义表示能力。</li>
+                            <li>召回：通常包括稠密检索、BM25 或混合检索。</li>
+                            <li>重排序：从“可能相关”里筛出“最能支撑答案”的证据。</li>
+                            <li>生成：让 LLM 基于证据进行回答，而不是自由发挥。</li>
+                            <li>验证与反馈：检查答案是否忠实，并为后续优化提供回流数据。</li>
+                        </ul>
+                        <p>
+                            这条链路里没有哪一步是“中性的”。每一层都可能引入误差，所以我现在更倾向于把 RAG 当作一条可以被测量、被调试、被迭代的流水线来看。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>3. Hybrid Retrieval 为什么重要</h2>
+                        <p>
+                            单一的 dense retrieval 对语义相似很敏感，但面对实体名、术语、编号或者非常精确的事实描述时，并不总是稳定。BM25 则恰好在这类词面信号上更有优势。
+                        </p>
+                        <p>
+                            所以 Hybrid Retrieval 对我来说并不只是增强项，而是提高召回覆盖面的一种基本策略。它的意义就在于，不把所有召回能力押在单一检索机制上。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>4. Rerank 决定了“证据能不能真正被用上”</h2>
+                        <p>
+                            现在回头看，很多表面上像“模型回答不好”的问题，最后其实都能追到 rerank。检索阶段只能告诉我们“哪些片段可能相关”，但 rerank 才真正决定“哪些片段值得被模型看到”。
+                        </p>
+                        <p>
+                            这一步的价值，在于把“召回得多”转化成“上下文够准”。没有这一步，模型很容易在一堆看起来都差不多的片段里被噪声带偏。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>5. 我最关心的不是回答流畅，而是 Faithfulness</h2>
+                        <p>
+                            RAG 系统最危险的一点，就是它很容易“答得很像回事”。但看起来像回事，不代表它真的在依据检索到的证据回答。所以我现在会特别关注 Faithfulness，也就是结论能否被上下文真正支撑。
+                        </p>
+                        <ul class="detail-list">
+                            <li>是否引用了真正相关的证据。</li>
+                            <li>是否把证据过度延伸成了原文没有表达的结论。</li>
+                            <li>是否在上下文不足时仍然强行回答。</li>
+                        </ul>
+                        <p>
+                            对我来说，这一层几乎决定了一个系统是否真的配得上“知识增强”这个名字。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>6. Query Rewrite 和反馈回路会让系统更像“活的”</h2>
+                        <p>
+                            很多检索失败并不是因为模型太弱，而是原始问题本身就不适合直接拿去检索。Query Rewrite 的意义，在于先把问题变成检索系统更容易处理的形式。
+                        </p>
+                        <p>
+                            再往前走一步，如果系统能持续记录失败查询、证据命中情况和用户不满意的回答，它就开始拥有真正的反馈回路，而不再只是一次性的静态管线。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>7. 我自己的项目启发</h2>
+                        <p>
+                            做医疗知识库 RAG 系统时，我一个很直接的感受是：很多所谓“回答质量问题”，最后都能追溯到更前面的工程设计。问题可能出在 chunk 太碎、召回不稳、rerank 不准，也可能只是 prompt 没有把“基于证据回答”说清楚。
+                        </p>
+                        <p>
+                            这让我慢慢形成一个很朴素的判断标准：做 RAG 时，先别急着比较模型，先看检索链路有没有被认真搭好。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>8. 我现在会怎么设计一个更稳的 RAG 系统</h2>
+                        <ul class="detail-list">
+                            <li>优先明确知识来源、更新频率和证据粒度。</li>
+                            <li>召回阶段尽量采用 Hybrid Retrieval，而不是单通道检索。</li>
+                            <li>把 rerank 当核心组件，而不是可有可无的增强项。</li>
+                            <li>在生成阶段加入引用、拒答与证据不足提示。</li>
+                            <li>对系统持续记录失败查询、证据选择和用户反馈。</li>
+                        </ul>
+                    </section>
+                </article>
+
+                <aside class="glass-panel detail-panel">
+                    <div class="detail-image-shell">
+                        <img src="images/note-rag-knowledge-systems.svg" alt="RAG knowledge enhancement pipeline diagram" />
+                    </div>
+                    <h3>我会继续补充的部分</h3>
+                    <ul class="detail-list">
+                        <li>不同 chunk 策略对召回质量的影响。</li>
+                        <li>面向事实问答与开放问答的不同评测方式。</li>
+                        <li>RAG 与 Agent 结合时的检索规划与验证机制。</li>
+                    </ul>
+                    <p>
+                        这篇笔记后续还会继续延展成“RAG 工程调优清单”，帮助我自己把知识增强系统从原型推进到更稳的应用层。
+                    </p>
+                </aside>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

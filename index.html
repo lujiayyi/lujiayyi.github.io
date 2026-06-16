@@ -87,8 +87,7 @@
                     </div>
                     <p class="hero-text">
                         陆佳艺 · Jiayi Lu，上海大学人工智能专业本科生，大三。
-
-                        主要关注 LLM、AI Agent、RAG、多模态智能与知识增强系统，持续围绕检索、推理、验证与部署构建可落地的智能系统。
+                        关注 LLM、AI Agent、RAG、AI驱动的软件工程。围绕检索、推理、验证与部署构建可落地的智能系统。
                     </p>
                     <div class="hero-chip-groups" aria-label="Education and research focus">
                         <div class="hero-chip-group">
@@ -148,10 +147,10 @@
                     <h2 class="section-title">项目</h2>
                 </div>
                 <div class="feature-stack">
-                    <article id="maar-agent" class="glass-panel feature-card feature-card-wide">
+                    <a id="maar-agent" href="project-counseling-agent.html" class="glass-panel feature-card feature-card-wide card-link-panel">
                         <div class="feature-copy">
                             <p class="project-index">01 / COUNSELING AGENT</p>
-                            <h3>心理咨询多 Agent 系统</h3>
+                            <h3 class="project-title-nowrap">心理咨询多 Agent 系统</h3>
                             <p>
                                 在大模型算法实习期间，围绕心理咨询场景参与数据工程、模型微调、多 Agent 协作与前端交互开发。系统以 Router Agent、Information Agent、Diagnosis Agent、Recommendation Agent 为核心，结合专业心理学知识库与长期/短期记忆机制，提升多轮咨询中的引导能力、上下文连续性与判定可靠性。
                             </p>
@@ -164,12 +163,12 @@
                         <div class="feature-media">
                             <img src="images/multiagent.png" alt="Counseling multi-agent system" class="feature-image" />
                         </div>
-                    </article>
+                    </a>
 
-                    <article class="glass-panel feature-card feature-card-wide">
+                    <a href="project-maar-agent.html" class="glass-panel feature-card feature-card-wide card-link-panel">
                         <div class="feature-copy">
                             <p class="project-index">02 / MAAR-AGENT</p>
-                            <h3>多源增强多模态 RAG 系统</h3>
+                            <h3 class="project-title-nowrap">多源增强多模态 RAG 系统</h3>
                             <p>
                                 围绕复杂问答中“检索不足、多模态利用率低、幻觉率高”的问题，设计 Multi-source Multi-modal Agent RAG 框架。系统以感知、问题分析、多源检索、重排序、推理生成、事实验证、自我纠错为主线，融合图像、网页与文本检索，并引入 CLIP 一致性、语义一致性与事实一致性验证机制，提升回答的可靠性与可解释性。
                             </p>
@@ -179,12 +178,12 @@
                                 <li>FAISS / vLLM / validation pipeline</li>
                             </ul>
                         </div>
-                        <div class="feature-media">
-                            <img src="images/maar.png" alt="MAAR-Agent report figure" class="feature-image" />
+                        <div class="feature-media feature-media-diagram">
+                            <img src="images/maar.png" alt="MAAR-Agent report figure" class="feature-image feature-image-report" />
                         </div>
-                    </article>
+                    </a>
 
-                    <article id="medical-rag" class="glass-panel feature-card">
+                    <a id="medical-rag" href="project-medical-rag.html" class="glass-panel feature-card card-link-panel">
                         <div class="feature-copy">
                             <p class="project-index">03 / MEDICAL RAG SYSTEM</p>
                             <h3>医疗知识库 RAG 系统</h3>
@@ -197,10 +196,10 @@
                                 <li>Qwen2.5 / Streamlit / feedback loop</li>
                             </ul>
                         </div>
-                        <div class="feature-media feature-media-tall">
-                            <img src="images/medicalrag.png" alt="Medical RAG interface" class="feature-image" />
+                        <div class="feature-media feature-media-diagram">
+                            <img src="images/medicalrag.png" alt="Medical RAG interface" class="feature-image feature-image-dashboard" />
                         </div>
-                    </article>
+                    </a>
                 </div>
             </div>
         </section>
@@ -218,26 +217,35 @@
                 </div>
 
                 <div class="notes-grid">
-                    <article class="glass-panel note-card">
-                        <span class="node-type">LLM</span>
-                        <h3>LLM 微调与对齐</h3>
-                        <p>Transformer、LoRA、QLoRA、RLHF、DPO、KV Cache、vLLM，以及从训练到推理部署的工程理解。</p>
-                    </article>
-                    <article class="glass-panel note-card">
+                    <a href="note-llm-evaluation.html" class="glass-panel note-card card-link-panel">
+                        <div class="note-card-thumb">
+                            <img src="images/note-llm-evaluation.svg" alt="LLM evaluation thumbnail" />
+                        </div>
+                        <span class="node-type">EVALUATION</span>
+                        <h3>大模型测评</h3>
+                        <p>基于微软研究综述梳理 LLM 评测的核心问题：评测什么、在哪评测、如何评测，以及鲁棒性、动态演化与可信评测的关键挑战。</p>
+                    </a>
+                    <a href="note-rag-knowledge-systems.html" class="glass-panel note-card card-link-panel">
+                        <div class="note-card-thumb">
+                            <img src="images/note-rag-knowledge-systems.svg" alt="RAG knowledge enhancement thumbnail" />
+                        </div>
                         <span class="node-type">RAG</span>
                         <h3>RAG 与知识增强</h3>
                         <p>BM25、Dense Retrieval、Hybrid Retrieval、Milvus、FAISS、Rerank、Faithfulness 与 Hallucination。</p>
-                    </article>
-                    <article class="glass-panel note-card">
+                    </a>
+                    <a href="note-ai-agent-workflows.html" class="glass-panel note-card card-link-panel">
+                        <div class="note-card-thumb">
+                            <img src="images/note-multi-agent-frameworks.svg" alt="Multi-agent frameworks thumbnail" />
+                        </div>
                         <span class="node-type">AGENT</span>
-                        <h3>AI Agent 工作流</h3>
-                        <p>LangChain、LangGraph、Dify、AutoGen、ReAct、Reflection、Plan & Execute 与 Tool Calling。</p>
-                    </article>
-                    <article class="glass-panel note-card">
+                        <h3>多 Agent 框架</h3>
+                        <p>围绕 Planner、Executor、Reviewer、Orchestrator 的角色分工，以及 Workflow、Plan-and-Execute、可观测性与成本控制。</p>
+                    </a>
+                    <a href="note-control-systems.html" class="glass-panel note-card card-link-panel">
                         <span class="node-type">SYSTEMS</span>
                         <h3>控制与系统工程</h3>
                         <p>PID、MPC、智能控制、编译原理、操作系统、网络协议与面向部署的系统基础能力。</p>
-                    </article>
+                    </a>
                 </div>
             </div>
         </section>

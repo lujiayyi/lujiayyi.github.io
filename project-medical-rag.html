@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="医疗知识库 RAG 系统项目详情页" />
+    <title>Medical RAG System | Jiayi Lu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="portfolio.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="portfolio-body bg-paper text-ink antialiased">
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+    <main class="detail-main">
+        <div class="mx-auto max-w-7xl px-6 lg:px-10">
+            <section class="detail-hero">
+                <a href="index.html#projects" class="back-link">返回项目</a>
+                <p class="eyebrow">PROJECT 03 · MEDICAL RAG SYSTEM</p>
+                <h1 class="section-title">医疗知识库 RAG 系统</h1>
+                <p class="detail-summary">
+                    这是一个面向医疗问答场景的知识库系统。我重点关注检索链路的完整性：从文档切分、向量化、混合检索、重排序，到查询优化、用户反馈与动态自我优化，让问答系统更稳定地服务真实知识场景。
+                </p>
+                <div class="detail-tags">
+                    <span>Milvus Lite</span>
+                    <span>BGE-M3</span>
+                    <span>BGE-Reranker-v2</span>
+                    <span>Qwen2.5</span>
+                    <span>Streamlit</span>
+                </div>
+            </section>
+
+            <section class="detail-layout">
+                <article class="glass-panel detail-panel">
+                    <h2>系统结构</h2>
+                    <ul class="detail-list">
+                        <li>文档切分与清洗，确保医疗知识入库前具备可检索性。</li>
+                        <li>基于 Milvus Lite 的向量检索，并结合 BM25 做混合检索。</li>
+                        <li>使用 BGE-Reranker-v2 提升证据排序质量。</li>
+                        <li>引入查询优化与用户反馈，形成动态自我优化闭环。</li>
+                    </ul>
+
+                    <h3>我从中学到的</h3>
+                    <ul class="detail-list">
+                        <li>向量数据库与 Embedding 模型的工程接口设计。</li>
+                        <li>RAG 系统效果并不只取决于模型，还高度依赖检索质量。</li>
+                        <li>问答准确率与系统可维护性需要一起设计。</li>
+                    </ul>
+
+                    <div class="detail-links">
+                        <a href="https://github.com/lujiayyi/medical-rag-system">GitHub Repo</a>
+                        <a href="medicalrag报告.docx">查看完整报告</a>
+                    </div>
+                </article>
+
+                <aside class="glass-panel detail-panel">
+                    <div class="detail-image-shell">
+                        <img src="images/medicalrag.png" alt="Medical RAG system architecture" />
+                    </div>
+                    <p>
+                        这个项目帮助我把“RAG 是什么”从概念层面真正推进到了一个可以部署、可以调优、可以不断迭代的系统层面。
+                    </p>
+                </aside>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

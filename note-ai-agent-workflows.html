@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="多 Agent 框架学习笔记" />
+    <title>多 Agent 框架 | Learning Note | Jiayi Lu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="portfolio.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="portfolio-body bg-paper text-ink antialiased">
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+    <main class="detail-main">
+        <div class="mx-auto max-w-7xl px-6 lg:px-10">
+            <section class="detail-hero">
+                <a href="index.html#blog" class="back-link">返回学习笔记</a>
+                <p class="eyebrow">LEARNING NOTE 02 · MULTI-AGENT FRAMEWORKS</p>
+                <h1 class="section-title">多 Agent 框架：从角色分工到工业化落地</h1>
+                <p class="detail-summary">
+                    这篇笔记写的是我目前对多 Agent 系统的一点理解。比起框架名词，我更关心的是：多 Agent 什么时候真的有必要，它靠什么比单 Agent 更稳，以及一套多 Agent 系统到底要怎样才算接近可落地。
+                </p>
+                <div class="detail-tags">
+                    <span>Workflow</span>
+                    <span>Plan-and-Execute</span>
+                    <span>Planner / Executor / Reviewer</span>
+                    <span>Trace & Observability</span>
+                    <span>Cost Control</span>
+                </div>
+            </section>
+
+            <section class="detail-layout">
+                <article class="glass-panel detail-panel note-article">
+                    <section class="note-section">
+                        <h2>1. 多 Agent 不是“多开几个模型”</h2>
+                        <p>
+                            我现在越来越觉得，多 Agent 最容易被误解的地方，就是它常常被讲成“多开几个模型一起协作”。真正的问题其实不是数量，而是任务结构。一个能回答问题的系统，和一个能把任务拆开、分发、检查、回退的系统，已经不是同一种复杂度。
+                        </p>
+                        <p>
+                            所以多 Agent 的价值不在于“更多”，而在于它能不能把复杂任务组织成一条稳定、可追踪、可回退的链路。对我来说，这更接近系统设计问题，而不是 Prompt 技巧问题。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>2. 从知识问答到工业化平台</h2>
+                        <p>
+                            一个我很认同的判断是：轻量型知识问答系统，很多时候靠 RAG 已经足够；但一旦进入复杂业务流程，问题就不再是“能不能回答”，而是“能不能按正确步骤完成”。
+                        </p>
+                        <ul class="detail-list">
+                            <li>知识问答关注“能否找到并回答”。</li>
+                            <li>复杂服务关注“能否按流程正确执行”。</li>
+                            <li>多 Agent 的引入，实际上是在弥补复杂流程中的规划、协作与执行缺口。</li>
+                        </ul>
+                        <p>
+                            这点和我自己的体验也很一致。系统一旦涉及多轮任务、工具调用、业务规则和状态管理，它就不再只是一个回答器，而开始变成一个执行系统。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>3. 我理解的多 Agent 基本角色</h2>
+                        <p>
+                            如果把多 Agent 拆得太花，系统会很快失控；但如果完全不拆，单个 Agent 又会背上过多职责。比较稳妥的做法，通常是围绕几个核心角色来组织：
+                        </p>
+                        <ul class="detail-list">
+                            <li>Planner：负责任务分解与执行策略制定。</li>
+                            <li>Executor / Worker：负责调用工具、执行子任务、产出中间结果。</li>
+                            <li>Reviewer：负责检查事实性、质量和一致性。</li>
+                            <li>Orchestrator / Supervisor：负责分发任务、汇总结果、处理冲突与回退。</li>
+                        </ul>
+                        <p>
+                            这样的拆法并不华丽，但工程上更可靠。每个角色边界清楚以后，失败模式才有机会被识别出来。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>4. 两种我觉得最实用的协同模式</h2>
+                        <h3>模式 A：Agent 嵌入 Workflow</h3>
+                        <p>
+                            转载文章提到，一种协同模式是把 Agent 放进工作流节点中。这种模式的优点是确定性强，适合酒店、客服、审批、工单等 SOP 很重的场景。流程决定“该走哪一步”，Agent 决定“这一步如何理解和处理”。
+                        </p>
+                        <h3>模式 B：Plan-and-Execute</h3>
+                        <p>
+                            另一种模式是 P&E：由 Planner Agent 先制定计划，再把任务分发给多个 Executor Agent 执行。这更适合开放性任务，例如研究、营销方案、复杂信息整合、深度问答等。
+                        </p>
+                        <p>
+                            就我自己的项目经验来看，心理咨询场景更接近 Workflow + Agent 的混合模式，而多源增强 RAG 更接近 Planner、Retriever、Verifier 这样的分工方式。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>5. 多 Agent 的真正难点不在 Prompt，而在工程治理</h2>
+                        <p>
+                            多 Agent 最难的地方通常不是第一次跑通，而是长期运行是否还稳定。真正棘手的往往是这些工程问题：
+                        </p>
+                        <ul class="detail-list">
+                            <li>状态同步：多个 Agent 如何共享上下文，又不互相污染。</li>
+                            <li>任务依赖：哪些任务能并行，哪些必须串行。</li>
+                            <li>结果冲突：多个 Agent 的输出不一致时，谁来裁决。</li>
+                            <li>成本控制：多 Agent 很容易把 token、工具调用和延迟拉高。</li>
+                            <li>失败回退：某个节点出错后，如何局部重试而不是整链路崩掉。</li>
+                        </ul>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>6. 评审、仲裁与共识机制</h2>
+                        <p>
+                            多 Agent 一旦进入协作阶段，就一定会遇到冲突。不同 Agent 给出不同结论时，系统靠什么决策，这件事不能留到最后靠经验拍板。多数投票、置信度加权、专门的 Reviewer 或 Aggregator，本质上都是在回答“系统最终相信谁”。
+                        </p>
+                        <p>
+                            这部分看起来很像细节，但其实决定了系统是否只是把噪声放大了一遍，还是能够真正形成比较稳的集体决策。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>7. 为什么 Trace、状态机和可观测性很关键</h2>
+                        <p>
+                            到了真正调系统的时候，最有价值的往往不是更长的 Prompt，而是状态机、Trace ID、执行上下文和日志关联。没有这些，很多问题根本没法定位。
+                        </p>
+                        <ul class="detail-list">
+                            <li>某次错误是哪个 Agent 引入的？</li>
+                            <li>是 Planner 拆错了，还是 Executor 调错工具了？</li>
+                            <li>某个结果为什么被仲裁器采纳？</li>
+                            <li>成本暴涨是因为哪条子链路失控？</li>
+                        </ul>
+                        <p>
+                            所以现在在我看来，可观测性不是上线之后补的监控模块，而应该从一开始就进入框架设计。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>8. 资源限额与安全执行环境</h2>
+                        <p>
+                            说到底，多 Agent 也是一套会消耗预算、占用资源、触发风险的系统。没有预算限制、调用配额、执行隔离和失败熔断，再聪明的 Agent 也很难进入真实生产环境。
+                        </p>
+                        <p>
+                            我现在会把这部分理解成：模型能力决定上限，而基础设施决定下限。
+                        </p>
+                    </section>
+
+                    <section class="note-section">
+                        <h2>9. 我自己的几个实践启发</h2>
+                        <ul class="detail-list">
+                            <li>先画执行图，再写 Prompt。没有执行图，多 Agent 很容易失控。</li>
+                            <li>角色尽量少而清晰，先从 2 到 4 个角色开始，而不是一开始就搭“智能体军团”。</li>
+                            <li>把 Reviewer / Verifier 角色前置，这对心理咨询、RAG 和复杂问答都很关键。</li>
+                            <li>用状态和日志做系统调试，而不是只看最终回答对不对。</li>
+                            <li>如果场景本身流程很强，优先考虑 Workflow + Agent，而不是完全自治式多 Agent。</li>
+                        </ul>
+                    </section>
+                </article>
+
+                <aside class="glass-panel detail-panel">
+                    <div class="detail-image-shell">
+                        <img src="images/note-multi-agent-frameworks.svg" alt="Multi-agent framework diagram" />
+                    </div>
+                    <h3>我当前最关注的设计点</h3>
+                    <ul class="detail-list">
+                        <li>什么时候应该用 Workflow，什么时候再升级到多 Agent 协作。</li>
+                        <li>如何把 Reviewer / Verifier 前置，而不是事后补救。</li>
+                        <li>如何用 Trace、状态机和预算控制把系统真正做成可运营形态。</li>
+                    </ul>
+                    <p>这篇笔记不是框架名词表，而是我自己在理解多 Agent 系统时最想反复回看的那几个结构问题：角色怎么拆、状态怎么管、错误怎么退、成本怎么控。</p>
+                </aside>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

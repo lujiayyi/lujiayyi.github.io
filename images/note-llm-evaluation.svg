@@ -1,0 +1,53 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1200" height="760" rx="36" fill="#F7FAFC"/>
+<rect x="36" y="36" width="1128" height="688" rx="28" fill="white" stroke="#D7E0EA"/>
+<text x="80" y="110" fill="#121A24" font-family="Manrope, Arial, sans-serif" font-size="34" font-weight="700">LLM Evaluation Framework</text>
+<text x="80" y="145" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">A structured view of what to evaluate, where to evaluate, and how to evaluate</text>
+
+<rect x="80" y="190" width="300" height="450" rx="24" fill="#F8FBFF" stroke="#D9E5F2"/>
+<text x="110" y="240" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16" font-weight="600">WHAT TO EVALUATE</text>
+<rect x="110" y="270" width="240" height="64" rx="18" fill="#EEF5FF"/>
+<text x="132" y="308" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">Language &amp; reasoning</text>
+<rect x="110" y="350" width="240" height="64" rx="18" fill="#EEF5FF"/>
+<text x="132" y="388" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">Robustness &amp; safety</text>
+<rect x="110" y="430" width="240" height="64" rx="18" fill="#EEF5FF"/>
+<text x="132" y="468" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">Domain capability</text>
+<rect x="110" y="510" width="240" height="94" rx="18" fill="#EEF5FF"/>
+<text x="132" y="548" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">Agent behavior</text>
+<text x="132" y="578" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">tool use, planning,</text>
+<text x="132" y="604" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">task completion</text>
+
+<rect x="450" y="190" width="300" height="450" rx="24" fill="#F8FBFF" stroke="#D9E5F2"/>
+<text x="480" y="240" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16" font-weight="600">WHERE TO EVALUATE</text>
+<rect x="480" y="270" width="240" height="96" rx="18" fill="#F1F6FB"/>
+<text x="505" y="308" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">General benchmarks</text>
+<text x="505" y="338" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">broad capability checks</text>
+<rect x="480" y="386" width="240" height="96" rx="18" fill="#F1F6FB"/>
+<text x="505" y="424" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">Scenario benchmarks</text>
+<text x="505" y="454" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">RAG, dialogue, agent tasks</text>
+<rect x="480" y="502" width="240" height="102" rx="18" fill="#F1F6FB"/>
+<text x="505" y="540" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">Dynamic regression</text>
+<text x="505" y="570" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">track capability drift</text>
+<text x="505" y="596" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">and data contamination</text>
+
+<rect x="820" y="190" width="300" height="450" rx="24" fill="#F8FBFF" stroke="#D9E5F2"/>
+<text x="850" y="240" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16" font-weight="600">HOW TO EVALUATE</text>
+<rect x="850" y="270" width="240" height="88" rx="18" fill="#EEF7F8"/>
+<text x="875" y="308" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">Automatic metrics</text>
+<text x="875" y="338" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">fast, scalable, repeatable</text>
+<rect x="850" y="378" width="240" height="88" rx="18" fill="#EEF7F8"/>
+<text x="875" y="416" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">Human evaluation</text>
+<text x="875" y="446" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">quality, risk, usefulness</text>
+<rect x="850" y="486" width="240" height="118" rx="18" fill="#EEF7F8"/>
+<text x="875" y="524" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600">Hybrid protocol</text>
+<text x="875" y="554" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">automatic regression +</text>
+<text x="875" y="580" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">human rubric + failure</text>
+<text x="875" y="606" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">mode analysis</text>
+
+<path d="M381 412H450" stroke="#A8B7C9" stroke-width="4" stroke-linecap="round"/>
+<path d="M751 412H820" stroke="#A8B7C9" stroke-width="4" stroke-linecap="round"/>
+<circle cx="415" cy="412" r="10" fill="#769BFF"/>
+<circle cx="785" cy="412" r="10" fill="#70D2FF"/>
+<rect x="80" y="662" width="1040" height="30" rx="15" fill="#EFF4F9"/>
+<text x="100" y="682" fill="#64758B" font-family="Manrope, Arial, sans-serif" font-size="16">Key challenge: robust, trustworthy, scenario-aware evaluation should be designed as a system, not just a leaderboard score.</text>
+</svg>
