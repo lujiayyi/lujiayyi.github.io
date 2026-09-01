@@ -1,262 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="陆佳艺, Jiayi Lu, LLM, AI Agent, RAG, VLM, NLP, 控制理论, Portfolio" />
     <meta
-        name="description"
-        content="Jiayi Lu 的个人主页：上海大学人工智能本科生，关注 LLM、AI Agent、RAG、多模态大模型、NLP 与知识增强、控制理论与系统工程。"
+      name="description"
+      content="Jiayi Lu 的个人主页：上海大学人工智能本科生，关注 LLM、AI Agent、RAG、多模态智能与系统工程。"
     />
     <title>Jiayi Lu | Cognitive Systems Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
-        rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        paper: "#f3f5f7",
-                        sand: "#dde2e8",
-                        ink: "#101318",
-                        graphite: "#4f5866",
-                        ember: "#6f7d91",
-                        apricot: "#ffffff",
-                        fog: "#fbfcfe",
-                        teal: "#cbd5e1"
-                    },
-                    fontFamily: {
-                        sans: ["Manrope", "Noto Sans SC", "sans-serif"]
-                    },
-                    boxShadow: {
-                        halo: "0 30px 120px rgba(111, 125, 145, 0.16)",
-                        glass: "0 20px 70px rgba(16, 19, 24, 0.08)"
-                    },
-                    letterSpacing: {
-                        airy: "0.28em"
-                    }
-                }
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              paper: "#f3f5f7",
+              sand: "#dde2e8",
+              ink: "#101318",
+              graphite: "#4f5866",
+              ember: "#6f7d91",
+              apricot: "#ffffff",
+              fog: "#fbfcfe",
+              teal: "#cbd5e1"
+            },
+            fontFamily: {
+              sans: ["Manrope", "Noto Sans SC", "sans-serif"]
             }
-        };
+          }
+        }
+      };
     </script>
-    <link href="portfolio.css" rel="stylesheet" type="text/css" />
-</head>
-<body class="portfolio-body bg-paper text-ink antialiased">
-    <canvas id="mercury-canvas" class="mercury-canvas" aria-hidden="true"></canvas>
-    <div class="page-aura page-aura-one"></div>
-    <div class="page-aura page-aura-two"></div>
-
-    <nav class="site-nav">
-        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-            <a href="index.html" class="brand-mark">
-                <span class="brand-dot"></span>
-                <span>JIAYI LU</span>
-            </a>
-            <div class="nav-cluster">
-                <a href="#home" class="nav-pill nav-pill-active">Home</a>
-                <a href="#projects" class="nav-pill">Projects</a>
-                <a href="#blog" class="nav-pill">Learning Notes</a>
-                <details class="contact-popover">
-                    <summary class="nav-pill contact-pill">Contact</summary>
-                    <div class="contact-popover-card">
-                        <p>lu_jiayi@shu.edu.cn</p>
-                        <p>13681684365</p>
-                        <button type="button" class="copy-contact-button" data-copy-contact="lu_jiayi@shu.edu.cn  13681684365">
-                            一键复制
-                        </button>
-                    </div>
-                </details>
-            </div>
-        </div>
-    </nav>
-
-    <main id="home">
-        <section class="hero-shell">
-            <div class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center justify-center px-6 pt-20 pb-14 lg:px-10">
-                <div class="hero-copy hero-copy-centered">
-                    <p class="eyebrow">LLM · AI AGENT · RAG · VLM · CONTROL · SYSTEMS</p>
-                    <div class="hero-portrait-shell">
-                        <div class="hero-portrait-frame">
-                            <img src="images/head.png" alt="Jiayi Lu portrait" class="hero-portrait" />
-                        </div>
-                    </div>
-                    <p class="hero-text">
-                        陆佳艺 · Jiayi Lu，上海大学人工智能专业本科生，大三。
-                        关注 LLM、AI Agent、RAG、AI驱动的软件工程。围绕检索、推理、验证与部署构建可落地的智能系统。
-                    </p>
-                    <div class="hero-chip-groups" aria-label="Education and research focus">
-                        <div class="hero-chip-group">
-                            <span class="hero-chip-label">Education</span>
-                            <div class="chip-cluster chip-cluster-compact">
-                                <span>Shanghai University · AI</span>
-                                <span>GPA 3.61 · Top 15%</span>
-                                <span>IELTS 6.5 / CET-4 631 / CET-6 570</span>
-                            </div>
-                        </div>
-                        <div class="hero-chip-group">
-                            <span class="hero-chip-label">Research Focus</span>
-                            <div class="chip-cluster chip-cluster-compact">
-                                <span>Large Language Model</span>
-                                <span>AI Agent</span>
-                                <span>RAG</span>
-                                <span>VLM / 多模态大模型</span>
-                                <span>NLP 与知识增强</span>
-                                <span>Control · Systems</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="portfolio-section">
-            <div class="mx-auto max-w-7xl px-6 lg:px-10">
-                <div class="section-head">
-                    <p class="section-kicker">Experience</p>
-                    <h2 class="section-title">工作经历</h2>
-                </div>
-
-                <div class="timeline-shell">
-                    <article class="timeline-panel">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-body">
-                            <p class="project-index">2025.6 - 2025.9</p>
-                            <h3>一万伏特（上海）信息科技有限公司｜大模型算法实习生</h3>
-                            <p>
-                                参与 40 万条心理咨询对话数据的收集、清洗、脱敏、增强与质量检测，整理为 Alpaca、ShareGPT 等标准训练格式；使用 LlamaFactory 对 Qwen3-32B 与 Qwen2.5-72B 进行 SFT 微调，并参与评测、推理部署与回复质量优化。
-                            </p>
-                            <p>
-                                同时基于 Dify 与 LangChain 构建多 Agent 心理咨询系统，设计 Router Agent、Information Agent、Diagnosis Agent、Recommendation Agent 协作架构，维护专业知识库与长期/短期记忆机制，并使用 Vue.js 完成交互界面、历史记录与 Agent 分析可视化开发。
-                            </p>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-                            
-                    
-        <section id="projects" class="portfolio-section">
-            <div class="mx-auto max-w-7xl px-6 lg:px-10">
-                <div class="section-head">
-                    <p class="section-kicker">Project Page</p>
-                    <h2 class="section-title">项目</h2>
-                </div>
-                <div class="feature-stack">
-                    <a id="maar-agent" href="project-counseling-agent.html" class="glass-panel feature-card feature-card-wide card-link-panel">
-                        <div class="feature-copy">
-                            <p class="project-index">01 / COUNSELING AGENT</p>
-                            <h3 class="project-title-nowrap">心理咨询多 Agent 系统</h3>
-                            <p>
-                                在大模型算法实习期间，围绕心理咨询场景参与数据工程、模型微调、多 Agent 协作与前端交互开发。系统以 Router Agent、Information Agent、Diagnosis Agent、Recommendation Agent 为核心，结合专业心理学知识库与长期/短期记忆机制，提升多轮咨询中的引导能力、上下文连续性与判定可靠性。
-                            </p>
-                            <ul class="project-tags">
-                                <li>Qwen3-32B / Qwen2.5-72B</li>
-                                <li>Dify / LangChain</li>
-                                <li>Memory / Prompt / Frontend</li>
-                            </ul>
-                        </div>
-                        <div class="feature-media">
-                            <img src="images/multiagent.png" alt="Counseling multi-agent system" class="feature-image" />
-                        </div>
-                    </a>
-
-                    <a href="project-maar-agent.html" class="glass-panel feature-card feature-card-wide card-link-panel">
-                        <div class="feature-copy">
-                            <p class="project-index">02 / MAAR-AGENT</p>
-                            <h3 class="project-title-nowrap">多源增强多模态 RAG 系统</h3>
-                            <p>
-                                围绕复杂问答中“检索不足、多模态利用率低、幻觉率高”的问题，设计 Multi-source Multi-modal Agent RAG 框架。系统以感知、问题分析、多源检索、重排序、推理生成、事实验证、自我纠错为主线，融合图像、网页与文本检索，并引入 CLIP 一致性、语义一致性与事实一致性验证机制，提升回答的可靠性与可解释性。
-                            </p>
-                            <ul class="project-tags">
-                                <li>Llama-3.2-11B-Vision-Instruct</li>
-                                <li>CLIP / SentenceTransformer / BGE</li>
-                                <li>FAISS / vLLM / validation pipeline</li>
-                            </ul>
-                        </div>
-                        <div class="feature-media feature-media-diagram">
-                            <img src="images/maar.png" alt="MAAR-Agent report figure" class="feature-image feature-image-report" />
-                        </div>
-                    </a>
-
-                    <a id="medical-rag" href="project-medical-rag.html" class="glass-panel feature-card card-link-panel">
-                        <div class="feature-copy">
-                            <p class="project-index">03 / MEDICAL RAG SYSTEM</p>
-                            <h3>医疗知识库 RAG 系统</h3>
-                            <p>
-                                基于 Milvus Lite、BGE-M3、BGE-Reranker-v2 与 Qwen2.5 构建面向医疗问答场景的知识库系统，完成文档切分、向量化、向量检索、混合检索、重排序与生成式回答链路，并引入查询优化、用户反馈与动态自我优化机制。
-                            </p>
-                            <ul class="project-tags">
-                                <li>Milvus Lite / BM25 / Hybrid Retrieval</li>
-                                <li>BGE-M3 / BGE-Reranker-v2</li>
-                                <li>Qwen2.5 / Streamlit / feedback loop</li>
-                            </ul>
-                        </div>
-                        <div class="feature-media feature-media-diagram">
-                            <img src="images/medicalrag.png" alt="Medical RAG interface" class="feature-image feature-image-dashboard" />
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="blog" class="portfolio-section blog-section">
-            <div class="mx-auto max-w-7xl px-6 lg:px-10">
-                <div class="section-head section-head-wide">
-                    <div>
-                        <p class="section-kicker">Learning Notes</p>
-                        <h2 class="section-title">学习笔记</h2>
-                    </div>
-                    <p class="section-aside">
-                        这里会持续记录我对大模型、Agent、RAG、系统工程的学习路径。
-                    </p>
-                </div>
-
-                <div class="notes-grid">
-                    <a href="note-llm-evaluation.html" class="glass-panel note-card card-link-panel">
-                        <div class="note-card-thumb">
-                            <img src="images/note-llm-evaluation.svg" alt="LLM evaluation thumbnail" />
-                        </div>
-                        <span class="node-type">EVALUATION</span>
-                        <h3>大模型测评</h3>
-                        <p>基于微软研究综述梳理 LLM 评测的核心问题：评测什么、在哪评测、如何评测，以及鲁棒性、动态演化与可信评测的关键挑战。</p>
-                    </a>
-                    <a href="note-rag-knowledge-systems.html" class="glass-panel note-card card-link-panel">
-                        <div class="note-card-thumb">
-                            <img src="images/note-rag-knowledge-systems.svg" alt="RAG knowledge enhancement thumbnail" />
-                        </div>
-                        <span class="node-type">RAG</span>
-                        <h3>RAG 与知识增强</h3>
-                        <p>BM25、Dense Retrieval、Hybrid Retrieval、Milvus、FAISS、Rerank、Faithfulness 与 Hallucination。</p>
-                    </a>
-                    <a href="note-ai-agent-workflows.html" class="glass-panel note-card card-link-panel">
-                        <div class="note-card-thumb">
-                            <img src="images/note-multi-agent-frameworks.svg" alt="Multi-agent frameworks thumbnail" />
-                        </div>
-                        <span class="node-type">AGENT</span>
-                        <h3>多 Agent 框架</h3>
-                        <p>围绕 Planner、Executor、Reviewer、Orchestrator 的角色分工，以及 Workflow、Plan-and-Execute、可观测性与成本控制。</p>
-                    </a>
-                    <a href="note-control-systems.html" class="glass-panel note-card card-link-panel">
-                        <span class="node-type">SYSTEMS</span>
-                        <h3>控制与系统工程</h3>
-                        <p>PID、MPC、智能控制、编译原理、操作系统、网络协议与面向部署的系统基础能力。</p>
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <div class="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-10 text-sm text-graphite lg:flex-row lg:items-center lg:justify-between lg:px-10">
-            <p>lu_jiayi@shu.edu.cn · 13681684365</p>
-        </div>
-    </footer>
-
-    <script type="module" src="portfolio.js"></script>
-</body>
+  </head>
+  <body class="portfolio-body bg-paper text-ink antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
