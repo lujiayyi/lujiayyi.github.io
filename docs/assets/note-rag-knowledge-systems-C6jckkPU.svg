@@ -1,0 +1,51 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1200" height="760" rx="36" fill="#F7FAFC"/>
+<rect x="36" y="36" width="1128" height="688" rx="28" fill="white" stroke="#D7E0EA"/>
+<text x="80" y="108" fill="#121A24" font-family="Manrope, Arial, sans-serif" font-size="34" font-weight="700">RAG &amp; Knowledge Enhancement Pipeline</text>
+<text x="80" y="144" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">A retrieval pipeline should optimize recall, evidence quality and grounded generation together</text>
+
+<rect x="76" y="240" width="148" height="110" rx="24" fill="#EEF5FF" stroke="#D8E5F3"/>
+<text x="112" y="284" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">Corpus</text>
+<text x="112" y="318" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">docs / PDFs</text>
+
+<rect x="260" y="240" width="148" height="110" rx="24" fill="#EEF7F8" stroke="#D8E9EA"/>
+<text x="291" y="284" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">Chunk</text>
+<text x="287" y="318" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">split / clean</text>
+
+<rect x="444" y="240" width="148" height="110" rx="24" fill="#F2F3FF" stroke="#DFE3F7"/>
+<text x="474" y="284" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">Embed</text>
+<text x="468" y="318" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">dense index</text>
+
+<rect x="628" y="240" width="148" height="110" rx="24" fill="#F4F8FC" stroke="#E1E8F0"/>
+<text x="654" y="284" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">Retrieve</text>
+<text x="658" y="318" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">BM25 + dense</text>
+
+<rect x="812" y="240" width="148" height="110" rx="24" fill="#EEF5FF" stroke="#D8E5F3"/>
+<text x="846" y="284" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">Rerank</text>
+<text x="845" y="318" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">evidence sort</text>
+
+<rect x="996" y="240" width="128" height="110" rx="24" fill="#EEF7F8" stroke="#D8E9EA"/>
+<text x="1030" y="284" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">LLM</text>
+<text x="1017" y="318" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="18">grounded answer</text>
+
+<path d="M224 295H260" stroke="#A8B7C9" stroke-width="4" stroke-linecap="round"/>
+<path d="M408 295H444" stroke="#A8B7C9" stroke-width="4" stroke-linecap="round"/>
+<path d="M592 295H628" stroke="#A8B7C9" stroke-width="4" stroke-linecap="round"/>
+<path d="M776 295H812" stroke="#A8B7C9" stroke-width="4" stroke-linecap="round"/>
+<path d="M960 295H996" stroke="#A8B7C9" stroke-width="4" stroke-linecap="round"/>
+
+<rect x="108" y="450" width="984" height="184" rx="28" fill="#FBFCFE" stroke="#E2E8F0"/>
+<text x="144" y="498" fill="#16212E" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700">Three optimization targets</text>
+
+<rect x="144" y="528" width="252" height="74" rx="18" fill="#F2F7FD"/>
+<text x="171" y="573" fill="#1A2432" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="600">Recall quality</text>
+<text x="171" y="598" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16">hybrid retrieval, query rewrite</text>
+
+<rect x="474" y="528" width="252" height="74" rx="18" fill="#F2F7FD"/>
+<text x="501" y="573" fill="#1A2432" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="600">Evidence precision</text>
+<text x="501" y="598" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16">rerank, citation, passage selection</text>
+
+<rect x="804" y="528" width="252" height="74" rx="18" fill="#F2F7FD"/>
+<text x="831" y="573" fill="#1A2432" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="600">Faithful generation</text>
+<text x="831" y="598" fill="#5C6B7C" font-family="Manrope, Arial, sans-serif" font-size="16">grounding, verification, feedback loop</text>
+</svg>
