@@ -12,6 +12,8 @@ import agentSequenceExampleImage from "../images/agent-sequence-example.png";
 import llmEvalWhereBenchmarksImage from "../images/llm-eval-where-benchmarks.png";
 import llmEvalOverviewMapImage from "../images/llm-eval-overview-map.png";
 import llmEvalWhatWhereHowImage from "../images/llm-eval-what-where-how.png";
+import foultrackAnalysisOverviewImage from "../images/foultrack-analysis-overview.png";
+import foultrackExplainableDialogueImage from "../images/foultrack-explainable-dialogue.png";
 
 export const assets = {
   headPortrait,
@@ -28,6 +30,8 @@ export const assets = {
   llmEvalWhereBenchmarksImage,
   llmEvalOverviewMapImage,
   llmEvalWhatWhereHowImage,
+  foultrackAnalysisOverviewImage,
+  foultrackExplainableDialogueImage,
   maarReport: new URL("../maar报告.docx", import.meta.url).href,
   medicalReport: new URL("../medicalrag报告.docx", import.meta.url).href
 };

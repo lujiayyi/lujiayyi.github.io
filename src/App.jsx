@@ -355,7 +355,7 @@ function HomePage() {
 
 function DetailLayout({ eyebrow, title, summary, tags, children, backTo }) {
   return (
-    <main className="detail-main">
+    <main className="detail-main detail-main-note">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <section className="detail-hero">
           <Link to={backTo} className="back-link">
@@ -462,6 +462,17 @@ function ProjectPage() {
       <section className="detail-layout">
         <article className="glass-panel detail-panel">
           {project.detail.sections.map(renderSection)}
+          {project.detail.media?.length ? (
+            <section className="project-media-gallery" aria-label="产品演示">
+              <p className="project-index">PRODUCT DEMO</p>
+              {project.detail.media.map((media) => (
+                <figure key={media.image} className="project-demo-figure">
+                  <img src={media.image} alt={media.alt} />
+                  <figcaption>{media.caption}</figcaption>
+                </figure>
+              ))}
+            </section>
+          ) : null}
         </article>
         <aside className="glass-panel detail-panel">
           <div className="detail-image-shell">

@@ -66,8 +66,54 @@ export const projects = [
     }
   },
   {
+    slug: "foultrackai",
+    index: "02 / FOULTRACKAI",
+    title: "FOULTRACKAI 智能足球裁判",
+    summary:
+      "面向足球比赛视频的智能辅助判罚系统。通过视频上传、动作识别与规则分析，输出犯规类型与判罚建议；同时提供围绕具体判罚的自然语言追问，让分析过程不只给出结论，也能够解释依据。",
+    tags: ["Video Understanding", "Rule-aware Analysis", "Explainable Dialogue"],
+    image: assets.foultrackAnalysisOverviewImage,
+    imageVariant: "default",
+    detail: {
+      summary:
+        "FOULTRACKAI 尝试把比赛视频理解、规则判断和自然语言解释放进同一条交互链路。用户从视频开始，获得动作类型与判罚建议；当对结论存在疑问时，还可以继续追问，让系统回到视频中的具体行为和判罚依据上。",
+      tags: ["Football Video Analysis", "Action Recognition", "Rule-aware Reasoning", "Explainable AI"],
+      sections: [
+        {
+          title: "从视频到判罚建议",
+          paragraphs: [
+            "系统支持上传比赛片段并启动视频分析。分析完成后，界面会将识别出的动作类型与判罚建议放在同一处展示，使用户可以在回看视频的同时理解系统的初步结论。",
+            "这类产品的重点不只是识别一次碰撞或一次触球，而是将视频中的动作信息组织成可供规则判断使用的证据。"
+          ]
+        },
+        {
+          title: "让结论可以被追问",
+          paragraphs: [
+            "在判罚结果之外，系统提供了围绕具体事件的对话入口。用户可以直接询问应出示什么牌、理由是什么；模型则把动作强度、是否存在明显伤害风险、是否尝试争抢球权等判断线索转化为清晰的解释。",
+            "对 VAR 类工具来说，可解释性不是附加功能。只有当系统能够说明自己为什么这样判断，使用者才有机会校验、质疑并合理地使用它。"
+          ]
+        }
+      ],
+      media: [
+        {
+          image: assets.foultrackAnalysisOverviewImage,
+          alt: "FOULTRACKAI 视频分析概览界面",
+          caption: "产品演示 01：视频上传、动作识别与初步判罚建议在同一工作区完成。"
+        },
+        {
+          image: assets.foultrackExplainableDialogueImage,
+          alt: "FOULTRACKAI 可解释判罚对话界面",
+          caption: "产品演示 02：用户可就判罚结果发起追问，系统根据视频中的判罚线索给出解释。"
+        }
+      ],
+      sideTitle: "项目关键词",
+      sideBody:
+        "从视频事件理解到规则判断，再到可追问的自然语言解释，FOULTRACKAI 探索的是面向真实比赛场景的辅助决策体验。"
+    }
+  },
+  {
     slug: "maar-agent",
-    index: "02 / MAAR-AGENT",
+    index: "03 / MAAR-AGENT",
     title: "多源增强多模态 RAG 系统",
     summary:
       "围绕复杂问答中“检索不足、多模态利用率低、幻觉率高”的问题，设计 Multi-source Multi-modal Agent RAG 框架。系统以感知、问题分析、多源检索、重排序、推理生成、事实验证、自我纠错为主线，融合图像、网页与文本检索，并引入 CLIP 一致性、语义一致性与事实一致性验证机制，提升回答的可靠性与可解释性。",
@@ -105,7 +151,7 @@ export const projects = [
   },
   {
     slug: "medical-rag",
-    index: "03 / MEDICAL RAG SYSTEM",
+    index: "04 / MEDICAL RAG SYSTEM",
     title: "医疗知识库 RAG 系统",
     summary:
       "基于 Milvus Lite、BGE-M3、BGE-Reranker-v2 与 Qwen2.5 构建面向医疗问答场景的知识库系统，完成文档切分、向量化、向量检索、混合检索、重排序与生成式回答链路，并引入查询优化、用户反馈与动态自我优化机制。",

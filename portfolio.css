@@ -1159,6 +1159,33 @@ summary {
     display: block;
 }
 
+.project-media-gallery {
+    display: grid;
+    gap: 1rem;
+    padding-top: 0.35rem;
+}
+
+.project-demo-figure {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(56, 64, 78, 0.12);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.68);
+}
+
+.project-demo-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.project-demo-figure figcaption {
+    padding: 0.8rem 1rem 0.9rem;
+    color: var(--graphite);
+    font-size: 0.82rem;
+    line-height: 1.55;
+}
+
 .detail-links,
 .source-list {
     display: flex;
