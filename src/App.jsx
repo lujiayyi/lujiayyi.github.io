@@ -216,6 +216,47 @@ function Navigation() {
 
 function HomePage() {
   const [searchParams] = useSearchParams();
+  const galleryRef = useRef(null);
+  const [openBook, setOpenBook] = useState(() => window.matchMedia("(max-width: 820px)").matches ? notes[0]?.slug : notes[2]?.slug);
+  const toolsRows = [
+    ["QoderWake", "#f3f3f3", "/tool-icons/qoderwake.svg"],
+    ["Claude", "#d97757", "/tool-icons/claude.svg", true],
+    ["Claude Code", "#34304c", "/tool-icons/claude.svg", true],
+    ["ChatGPT", "#151515", "/tool-icons/openai.svg", true],
+    ["Qwen", "#f7f4fd", "/tool-icons/qwen.png"],
+    ["LlamaFactory", "#8a56d2", "/tool-icons/llamafactory.svg"],
+    ["Dify", "#f7f9ff", "/tool-icons/dify.png"],
+    ["LangChain", "#317f7b", "/tool-icons/langchain.svg", true],
+    ["vLLM", "#f8f9ff", "/tool-icons/vllm.svg"]
+  ];
+  const buildRows = [
+    ["FAISS", "#366bac", "/tool-icons/faiss.svg"],
+    ["Milvus", "#ffffff", "/tool-icons/milvus.png"],
+    ["Python", "#3776ab", "/tool-icons/python.svg", true],
+    ["Vue.js", "#42a883", "/tool-icons/vue.svg", true],
+    ["Streamlit", "#f06b65", "/tool-icons/streamlit.svg", true],
+    ["CLIP", "#8279c7", "/tool-icons/clip.svg"],
+    ["BGE", "#6479bb", "/tool-icons/bge.svg"],
+    ["BM25", "#7c8293", "/tool-icons/bm25.svg"],
+    ["SentenceTransformer", "#557fa2", "/tool-icons/sentence-transformer.svg"]
+  ];
+
+  function renderToolRow(items, label) {
+    return (
+      <div className="tools-marquee-track" aria-label={label}>
+        {[0, 1].map((copy) => (
+          <div className="tools-marquee-set" key={copy} aria-hidden={copy === 1 ? "true" : undefined}>
+            {items.map(([name, color, icon, monochrome]) => (
+              <span className="tool-pill" key={name}>
+                <span className="tool-mark" style={{ "--tool-color": color }}><img className={monochrome ? "tool-icon-monochrome" : ""} src={icon} alt="" /></span>
+                <span>{name}</span>
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   useEffect(() => {
     const section = searchParams.get("section");
@@ -228,6 +269,96 @@ function HomePage() {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 50);
   }, [searchParams]);
+
+  useEffect(() => {
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+    const cards = [...gallery.querySelectorAll(".gallery-project")];
+    const narrow = window.matchMedia("(max-width: 820px)");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frameId = 0;
+    let startedAt = performance.now();
+    let pausedAt = null;
+    let pauseDuration = 0;
+    let activeCard = null;
+
+    function draw(now) {
+      const time = pausedAt ?? now;
+      const cycle = 30000;
+      const travel = ((time - startedAt - pauseDuration) % cycle + cycle) % cycle / cycle;
+      const width = gallery.clientWidth;
+      cards.forEach((card, index) => {
+        const progress = (0.86 - index / cards.length + travel + 1) % 1;
+        const depth = Math.pow(progress, 1.35);
+        const x = width * (0.98 - progress * 1.18);
+        const y = 12 + depth * 132 + Math.sin(index * 2.4) * 15;
+        const scale = 0.47 + depth * 1.08;
+        const opacity = Math.min(1, progress / 0.045, (1 - progress) / 0.055);
+        card.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale}) rotate(${3.5 - progress * 8}deg)`;
+        card.style.opacity = String(Math.max(0, opacity));
+        card.style.zIndex = card === activeCard ? "20" : String(Math.round(progress * 10) + 1);
+      });
+      frameId = window.requestAnimationFrame(draw);
+    }
+
+    function pause(event) {
+      if (pausedAt === null) pausedAt = performance.now();
+      activeCard = event.currentTarget;
+    }
+
+    function resume() {
+      if (pausedAt !== null) pauseDuration += performance.now() - pausedAt;
+      pausedAt = null;
+      activeCard = null;
+    }
+
+    function syncMotion() {
+      window.cancelAnimationFrame(frameId);
+      if (narrow.matches || reduced.matches) {
+        gallery.classList.remove("is-motion-ready");
+        cards.forEach((card) => {
+          card.style.transform = "";
+          card.style.opacity = "";
+          card.style.zIndex = "";
+        });
+        return;
+      }
+      startedAt = performance.now();
+      pauseDuration = 0;
+      pausedAt = null;
+      gallery.classList.add("is-motion-ready");
+      frameId = window.requestAnimationFrame(draw);
+    }
+
+    function highlight(event) {
+      activeCard = event.currentTarget;
+    }
+
+    function unhighlight() {
+      activeCard = null;
+    }
+
+    cards.forEach((card) => {
+      card.addEventListener("pointerenter", highlight);
+      card.addEventListener("pointerleave", unhighlight);
+      card.addEventListener("focus", pause);
+      card.addEventListener("blur", resume);
+    });
+    narrow.addEventListener("change", syncMotion);
+    reduced.addEventListener("change", syncMotion);
+    syncMotion();
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      narrow.removeEventListener("change", syncMotion);
+      reduced.removeEventListener("change", syncMotion);
+      cards.forEach((card) => {
+        card.removeEventListener("pointerenter", highlight);
+        card.removeEventListener("pointerleave", unhighlight);
+        card.removeEventListener("focus", pause);
+        card.removeEventListener("blur", resume);
+      });
+    };
+  }, []);
 
   return (
     <main id="home">
@@ -245,17 +376,13 @@ function HomePage() {
               <div className="hero-chip-group">
                 <span className="hero-chip-label">Education</span>
                 <div className="chip-cluster chip-cluster-compact">
-                  {siteMeta.education.map((item) => (
-                    <span key={item}>{item}</span>
-                  ))}
+                  {siteMeta.education.map((item) => <span key={item}>{item}</span>)}
                 </div>
               </div>
               <div className="hero-chip-group">
                 <span className="hero-chip-label">Research Focus</span>
                 <div className="chip-cluster chip-cluster-compact">
-                  {siteMeta.researchFocus.map((item) => (
-                    <span key={item}>{item}</span>
-                  ))}
+                  {siteMeta.researchFocus.map((item) => <span key={item}>{item}</span>)}
                 </div>
               </div>
             </div>
@@ -286,42 +413,26 @@ function HomePage() {
 
       <section id="projects" className="portfolio-section">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="section-head">
-            <p className="section-kicker">Project Page</p>
-            <h2 className="section-title">项目</h2>
+          <div className="section-head gallery-section-head">
+            <div><p className="section-kicker">Selected projects / 01 — {String(projects.length).padStart(2, "0")}</p><h2 className="section-title">项目展廊</h2></div>
+            <p>Agent、智能系统与企业工作流的实践。</p>
           </div>
-          <div className="feature-stack">
-            {projects.map((project) => (
-              <Link
-                key={project.slug}
-                to={`/project/${project.slug}`}
-                className={`glass-panel feature-card ${project.imageVariant === "diagram" ? "" : "feature-card-wide"} card-link-panel`}
-              >
-                <div className="feature-copy">
-                  <p className="project-index">{project.index}</p>
-                  <h3 className={project.slug !== "medical-rag" ? "project-title-nowrap" : ""}>{project.title}</h3>
-                  <p>{project.summary}</p>
-                  <ul className="project-tags">
-                    {project.tags.map((tag) => (
-                      <li key={tag}>{tag}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className={`feature-media ${project.imageVariant === "diagram" ? "feature-media-diagram" : ""}`}>
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className={`feature-image ${
-                      project.slug === "maar-agent"
-                        ? "feature-image-report"
-                        : project.slug === "medical-rag"
-                          ? "feature-image-dashboard"
-                          : ""
-                    }`}
-                  />
-                </div>
-              </Link>
-            ))}
+          <div className="project-gallery" ref={galleryRef}>
+            <div className="project-gallery-track">
+              {projects.map((project, index) => (
+                <Link
+                  key={project.slug}
+                  to={`/project/${project.slug}`}
+                  className={`gallery-project gallery-project-${index + 1}`}
+                >
+                  <div className="gallery-project-cover">
+                    <span className="gallery-cover-top">JIAYI LU <span>PROJECT {String(index + 1).padStart(2, "0")}</span></span>
+                    <span className="gallery-project-media"><img src={project.image} alt="" /></span>
+                    <span className="gallery-project-foot"><span>{project.tags[0]}</span><strong>{project.title}</strong><span className="gallery-project-open">查看项目 ↗</span></span>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -333,21 +444,37 @@ function HomePage() {
               <p className="section-kicker">Learning Notes</p>
               <h2 className="section-title">学习笔记</h2>
             </div>
-            <p className="section-aside">这里会持续记录我对大模型、Agent、RAG、系统工程的学习路径。</p>
+            <p className="section-aside">从书脊抽出笔记，翻看我对大模型、Agent、RAG 与系统工程的学习记录。</p>
           </div>
-          <div className="notes-grid">
-            {notes.map((note) => (
-              <Link key={note.slug} to={`/note/${note.slug}`} className="glass-panel note-card card-link-panel">
-                <div className="note-card-thumb">
-                  <img src={note.thumb} alt={`${note.title} thumbnail`} />
-                </div>
-                <span className="node-type">{note.category}</span>
-                <h3>{note.title}</h3>
-                <p>{note.cardSummary}</p>
+          <div className="notes-bookshelf" aria-label="学习笔记书架">
+            <div className="shelf-decor" aria-hidden="true">{["#476c61", "#d6c8aa", "#6e7e70", "#744957", "#bba774"].map((color, index) => <span key={index} style={{ "--spine-color": color }} />)}</div>
+            {notes.map((note, index) => (
+              <Link
+                key={note.slug}
+                to={`/note/${note.slug}`}
+                className={`shelf-book ${openBook === note.slug ? "is-open" : ""}`}
+                onMouseEnter={() => setOpenBook(note.slug)}
+                onFocus={() => setOpenBook(note.slug)}
+                onClick={(event) => {
+                  if (window.matchMedia("(hover: none)").matches && openBook !== note.slug) {
+                    event.preventDefault();
+                    setOpenBook(note.slug);
+                  }
+                }}
+              >
+                <span className="shelf-spine"><strong>{note.spineTitle || note.title}</strong></span>
+                <span className="shelf-cover"><span className="shelf-cover-eyebrow">JIAYI LU / VOL. {String(index + 1).padStart(2, "0")}</span><strong>{note.title}</strong><span className="shelf-art"><img src={{ "llm-evaluation": "/book-art/evaluation.svg", "rag-knowledge-systems": "/book-art/rag.svg", "multi-agent-frameworks": "/book-art/agent.svg", "control-systems": "/book-art/systems.svg", "llm-finetuning-deployment": "/book-art/finetuning.svg" }[note.slug]} alt="" /></span><span className="shelf-cover-foot"><span>{note.category}</span><span aria-hidden="true">↗</span></span></span>
               </Link>
             ))}
+            <div className="shelf-decor shelf-decor-end" aria-hidden="true">{["#d4ccb7", "#805869", "#5f796e", "#c9bc9d", "#577f78", "#9c5962"].map((color, index) => <span key={index} style={{ "--spine-color": color }} />)}</div>
           </div>
         </div>
+      </section>
+
+      <section className="tools-section" aria-labelledby="tools-heading">
+        <h2 id="tools-heading">TOOLS I WORK WITH</h2>
+        <div className="tools-marquee tools-marquee-forward">{renderToolRow(toolsRows, "模型与检索工具")}</div>
+        <div className="tools-marquee tools-marquee-reverse">{renderToolRow(buildRows, "开发与分析工具")}</div>
       </section>
     </main>
   );
@@ -476,7 +603,9 @@ function ProjectPage() {
         </article>
         <aside className="glass-panel detail-panel">
           <div className="detail-image-shell">
-            <img src={project.image} alt={project.title} />
+            <a href={project.image} target="_blank" rel="noreferrer" aria-label={`查看${project.title}图片大图`}>
+              <img src={project.image} alt={project.title} />
+            </a>
           </div>
           <h3>{project.detail.sideTitle}</h3>
           {project.detail.sideLinks?.length ? (

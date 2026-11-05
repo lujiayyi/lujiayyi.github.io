@@ -188,6 +188,86 @@ export const projects = [
       sideBody:
         "这个项目帮助我把向量数据库、Embedding、Hybrid Retrieval、Rerank 和反馈回路真正放进一条可调试的流水线里，也让我形成了更稳定的 RAG 工程视角。"
     }
+  },
+  {
+    slug: "bosch-planning-dashboard",
+    index: "05 / PLANNING BOARD",
+    title: "Planning Board 资源规划看板",
+    summary: "面向团队需求、人员与容量规划的内部工作台。通过统一的需求管理、可用容量计算和年度汇总，把分散的排期数据转化为可查看、可调整的规划视图。",
+    tags: ["Vue 3 / ECharts", "FastAPI / SQLAlchemy", "PostgreSQL / Capacity Planning"],
+    image: assets.boschDashboardImage,
+    imageVariant: "diagram",
+    detail: {
+      summary: "Planning Board 将需求、出勤、假期和人员状态汇入同一条计算链路，帮助规划人员查看工作负载、剩余容量与团队分配情况。项目材料包含前后端实现、容量服务和团队汇总看板。",
+      tags: ["Vue 3", "Element Plus", "ECharts", "FastAPI", "PostgreSQL", "SSO"],
+      sections: [
+        { title: "业务链路", bullets: [
+          "汇集需求、团队成员、公共假期、个人请假与人员状态等输入。",
+          "由后端服务计算可用容量、已分配工作量、剩余容量和利用率。",
+          "在 Dashboard、需求列表和报表中展示月度与年度结果，支持日常分配决策。"
+        ] },
+        { title: "系统实现", paragraphs: [
+          "前端使用 Vue 3、Element Plus 和 ECharts 构建工作台；FastAPI 按 API、业务服务和数据模型分层，使用 SQLAlchemy 访问 PostgreSQL。前端通过权限路由呈现不同工作模块。",
+          "团队汇总看板支持按年份和月份查看负载、可用容量、余额、假期和各类需求占用。容量计算会结合成员状态与工作日，避免把缺勤时间计入可用资源。"
+        ] }
+      ],
+      sideTitle: "架构图",
+      sideBody: "图源：Planning Board 项目 PDF 第 61 页。点击图片可查看原图大图。"
+    }
+  },
+  {
+    slug: "bosch-esm-copilot",
+    index: "06 / ESM COPILOT",
+    title: "ESM 工单 Copilot",
+    summary: "面向 SAP 财务工单的工程师辅助处理系统。使用 LangGraph 串联工单标准化、分类提取、规则分流、知识检索、值班专家查询与邮件草稿，并保留人工审核入口。",
+    tags: ["LangGraph / LLM", "FastAPI / React", "RAG / Human Review"],
+    image: assets.boschEsmImage,
+    imageVariant: "diagram",
+    detail: {
+      summary: "ESM Copilot 把工单处理拆成可追踪的工作流节点：先提取信息和分类，再依据置信度决定审核路径，随后检索相关知识、查询值班专家并生成通知草稿。工程师可以在工作台查看证据与执行记录。",
+      tags: ["React / TypeScript", "FastAPI", "LangGraph", "PostgreSQL", "RAG", "Human-in-the-loop"],
+      sections: [
+        { title: "可运行的工作流", bullets: [
+          "标准化工单描述与 OCR 文本，提取摘要、关键词、缺失信息和推荐子类。",
+          "根据原始分类与推荐分类是否一致及置信度，决定自动通过、待审核或人工分类。",
+          "检索知识库、查询值班专家，并将邮件写入 Outbox；实际发送由环境配置控制。",
+          "保存每个节点的执行事件，便于工程师检查分类依据和处理路径。"
+        ] },
+        { title: "工程师工作台", paragraphs: [
+          "React 工作台集中展示工单队列、分类决策、缺失信息、知识检索结果、值班专家、工作流轨迹和邮件草稿。对待审核工单，工程师可明确批准或拒绝。",
+          "当前仓库提供本地 Docker Compose 开发方式；文档把服务端部署列为后续目标，因此页面以项目实现与本地演示为准。"
+        ] }
+      ],
+      sideTitle: "架构图",
+      sideBody: "图源：IT Service Copilot V13 Draw.io 文件首页，为项目目标架构；详情文字描述当前仓库可见的实现。点击图片可查看大图。"
+    }
+  },
+  {
+    slug: "bosch-sap-testpilot",
+    index: "07 / SAP TESTPILOT AI",
+    title: "SAP TestPilot AI 自动化验证",
+    summary: "围绕 SAP 财务回归测试的自动化演示：上层 Agent 选择受限工具，底层脚本执行确定性的 WebGUI 表查询，结果经类型校验后保存为可追溯的结构化记录。",
+    tags: ["Documind Agent", "Browser Use / SAP WebGUI", "Pydantic / Audit Trail"],
+    image: assets.boschSapImage,
+    imageVariant: "diagram",
+    detail: {
+      summary: "该项目验证了 Agent 编排与确定性 SAP 页面操作的组合。Agent 负责选择允许的业务工具与汇总结果，具体点击、输入和表格解析由固定脚本完成，降低自由操作企业系统的不确定性。",
+      tags: ["Agent Orchestration", "Browser Use", "SAP WebGUI", "SE16", "Pydantic v2", "Structured Output"],
+      sections: [
+        { title: "受控执行链路", bullets: [
+          "业务请求进入 Agent，由其选择预先注册的 SAP 查询工具。",
+          "受限工具调用脚本化浏览器层，按固定页面字段与操作步骤执行表查询。",
+          "Pydantic 模型校验输入输出；每次运行保存请求、查询记录和汇总结果。",
+          "演示以财务单据查询和核对为例，展示可审计的自动化路径。"
+        ] },
+        { title: "设计判断", paragraphs: [
+          "项目文档明确限制 Agent 使用通用点击、输入和导航动作。模型承担任务编排与结果概括，稳定的 SAP WebGUI 操作交给脚本，以便复用、排查和审计。",
+          "架构图呈现的是演示实现，不将规划中的大规模回归测试目标写成已经完成的业务成效。"
+        ] }
+      ],
+      sideTitle: "架构图",
+      sideBody: "图源：SAP TestPilot AI 项目 PDF 第 151 页。点击图片可查看原图大图。"
+    }
   }
 ];
 
@@ -197,6 +277,7 @@ export const notes = [
     index: "LEARNING NOTE 01 · LLM EVALUATION",
     category: "EVALUATION",
     title: "大模型评测，到底在评什么？",
+    spineTitle: "大模型评测",
     cardSummary:
       "从能力边界、鲁棒性到系统场景评测，梳理我目前对大模型测评的理解，以及为什么评测应该前置到系统设计阶段。",
     heroTitle: "大模型测评：从“评测什么”到“如何设计可信评测”",
@@ -456,6 +537,7 @@ export const notes = [
     index: "LEARNING NOTE 02 · RAG & KNOWLEDGE ENHANCEMENT",
     category: "RAG",
     title: "RAG 与知识增强",
+    spineTitle: "RAG 知识增强",
     cardSummary:
       "不是把模型接上向量库就结束了，而是要把召回、证据筛选、生成、验证和反馈一起看成系统问题。",
     heroTitle: "RAG 与知识增强",
@@ -550,6 +632,7 @@ export const notes = [
     index: "LEARNING NOTE 03 · MULTI-AGENT FRAMEWORKS",
     category: "AGENT",
     title: "多 Agent 进化论：从 API 到智能体",
+    spineTitle: "多 Agent",
     cardSummary:
       "多 Agent 什么时候真的必要，角色怎么拆，系统怎样保持可观测、可回退、可控成本。",
     heroTitle: "多 Agent 框架：从大模型接口到可落地协作系统",
@@ -742,6 +825,7 @@ print(completion.choices[0].message.content)</code></pre>
     index: "LEARNING NOTE 04 · CONTROL & SYSTEMS",
     category: "SYSTEMS",
     title: "控制与系统工程",
+    spineTitle: "控制与系统",
     cardSummary:
       "从 PID、MPC 到编译原理、操作系统和网络协议，记录支撑可部署 AI 系统的基础能力。",
     heroTitle: "控制与系统工程",
@@ -760,5 +844,68 @@ print(completion.choices[0].message.content)</code></pre>
     sideTitle: "准备补充的主题",
     sideBullets: ["PID 与 MPC", "编译原理基础", "操作系统核心机制", "网络协议与服务通信"],
     sideBody: "这部分后面会继续展开成更系统的技术笔记。"
+  },
+  {
+    slug: "llm-finetuning-deployment",
+    index: "LEARNING NOTE 05 · MODEL ENGINEERING",
+    category: "FINE-TUNING",
+    title: "从微调到部署：LLaMA-Factory × Xinference",
+    spineTitle: "模型微调与部署",
+    cardSummary: "将数据准备、LoRA 微调、模型合并、推理验证与服务部署串成一条可复现的工作流。",
+    heroTitle: "从微调到部署：LLaMA-Factory × Xinference",
+    heroSummary: "根据我的操作指南整理：先准备符合模板的数据，再训练适配器、验证效果，最后按部署需求合并并通过 Xinference 提供服务。",
+    tags: ["LLaMA-Factory", "LoRA", "Dataset", "Inference", "Xinference"],
+    thumb: "/book-art/finetuning.svg",
+    sections: [
+      {
+        title: "01 · 先理清整条链路",
+        lead: "数据 → 基础模型与模板 → LoRA 训练 → 验证 → 可选合并 → 部署。",
+        paragraphs: [
+          "LLaMA-Factory 负责数据加载、微调、导出和本地推理；Xinference 负责把准备好的模型作为服务运行。LoRA 训练产物通常是适配器，不能把它直接当成完整基础模型。",
+          "开始前确认 GPU 显存、CUDA 与 PyTorch 环境，以及基础模型的许可证和对话模板。LLaMA-Factory 与 Xinference 的命令、界面和模型格式随版本变化，实际操作以当前安装版本的官方文档为准。"
+        ]
+      },
+      {
+        title: "02 · 数据准备与注册",
+        paragraphs: [
+          "原指南使用 Alpaca 格式：instruction 是任务指令，input 是补充输入，output 是期望回答。训练数据先清洗、去重和脱敏，再划分训练集与验证集，避免同一问题泄漏到两边。",
+          "把 JSON 数据文件放入 LLaMA-Factory 的 data 目录，并在 dataset_info.json 中注册文件名和字段映射：prompt → instruction、query → input、response → output。训练时使用注册的数据集名称。"
+        ],
+        code: `[
+  {
+    "instruction": "翻译以下句子到英文：",
+    "input": "你好，世界！",
+    "output": "Hello, world!"
+  }
+]`
+      },
+      {
+        title: "03 · 使用 LoRA 微调",
+        paragraphs: [
+          "可以在 LlamaBoard 中选择基础模型、数据集和 LoRA 方法，设置学习率、轮次、批大小与输出目录；也可以使用 CLI 配置相同参数。对话模板必须与基础模型匹配。",
+          "有效批大小由单卡批大小、梯度累积步数和 GPU 数共同决定。训练时观察训练与验证损失，并用未见过的样例检查回答质量，避免只凭 loss 判断模型是否可用。",
+          "原文中的 src/train_bash.py 属于旧版脚本路径；新版通常使用 llamafactory-cli train 与 YAML 配置。具体参数名称应先通过当前版本帮助命令核对。"
+        ]
+      },
+      {
+        title: "04 · 验证与导出",
+        paragraphs: [
+          "先加载基础模型与 LoRA 适配器，在 LlamaBoard Chat 或 CLI 中检查实际回答。固定几组代表性任务，比较微调前后质量、事实性和格式遵循情况。",
+          "部署框架若不直接加载适配器，可在 Export 中指定原始基础模型、适配器路径与导出目录，合并得到完整权重。导出后再次运行相同样例，确认合并没有引入异常。",
+          "合并会占用额外磁盘和内存；量化、精度与目标部署格式需要提前确定。原文中的 src/export_model.py 与 src/chat_cli.py 同样应按所用版本更新。"
+        ]
+      },
+      {
+        title: "05 · 用 Xinference 提供推理服务",
+        paragraphs: [
+          "启动 Xinference 服务后，在管理界面注册本地模型路径，确认模型类型、格式和量化设置，再启动模型。部署前先检查该版本是否支持当前导出格式。",
+          "服务运行后，记录模型 UID，先用简单请求验证响应，再接入上层应用。检查首字延迟、显存占用、并发与异常日志；生产环境还需要访问控制、监控和重启策略。",
+          "这条链路的核心检查点是：数据能正确加载、模板匹配、适配器能推理、导出结果一致、服务接口能稳定回答。"
+        ]
+      }
+    ],
+    sideTitle: "来源与说明",
+    sideBullets: ["整理自 llm_instruction.md", "保留中文指南主线", "命令需按安装版本核对"],
+    sideBody: "原文还附有英文版操作指南；此页合并重复内容，形成便于回顾的学习笔记。"
   }
 ];
