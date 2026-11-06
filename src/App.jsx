@@ -293,8 +293,8 @@ function TravelGallery() {
     <section id="travel" className="travel-section" aria-labelledby="travel-heading">
       <div className="travel-inner mx-auto max-w-7xl px-6 lg:px-10">
         <div className="travel-heading">
-          <p className="section-kicker">Places / 01 — 03</p>
-          <h2 id="travel-heading">沿途<span>所见</span></h2>
+          <p className="section-kicker">Places</p>
+          <h2 id="travel-heading" className="section-title">沿途所见</h2>
         </div>
         <div className="travel-stage" ref={stageRef}>
           {travelPlaces.map((destination, index) => (
@@ -309,7 +309,7 @@ function TravelGallery() {
                 <img className="travel-place-back" src={destination.detail} alt="" decoding="async" />
                 <img className="travel-place-front" src={destination.cover} alt="" decoding="async" />
               </span>
-              <span className="travel-place-meta"><span>{String(index + 1).padStart(2, "0")} / {destination.country}</span><strong>{destination.name}</strong><span>{destination.chineseName} · {destination.photos.length} photos ↗</span></span>
+              <span className="travel-place-meta"><span>{String(index + 1).padStart(2, "0")} / {destination.country}</span><strong>{destination.name}</strong><span>{destination.photos.length} photos ↗</span></span>
             </button>
           ))}
           <span className="travel-stage-note" aria-hidden="true">SCROLL TO WANDER / SELECT A PLACE TO ENTER</span>
@@ -576,16 +576,19 @@ function HomePage() {
             <h2 className="section-title">工作经历</h2>
           </div>
           <div className="timeline-shell">
-            <article className="timeline-panel">
-              <div className="timeline-dot"></div>
-              <div className="timeline-body">
-                <p className="project-index">{siteMeta.experience.period}</p>
-                <h3>{siteMeta.experience.company}</h3>
-                {siteMeta.experience.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </div>
-            </article>
+            {siteMeta.experiences.map((experience) => {
+              const hasDetails = Boolean(experience.project || experience.paragraphs?.length);
+              const heading = <><span className="project-index">{experience.period}</span><span className="timeline-company">{experience.company}</span>{experience.role && <span className="timeline-role">{experience.role}</span>}<span className="timeline-toggle" aria-hidden="true">{hasDetails ? "+" : ""}</span></>;
+              return hasDetails ? (
+                <details className="timeline-panel" key={experience.company}>
+                  <summary className="timeline-heading">{heading}</summary>
+                  <div className="timeline-body">
+                    {experience.project && <div className="timeline-project"><p>{experience.project.description}</p></div>}
+                    {experience.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  </div>
+                </details>
+              ) : <div className="timeline-panel" key={experience.company}><div className="timeline-heading timeline-heading-static">{heading}</div></div>;
+            })}
           </div>
         </div>
       </section>
@@ -593,8 +596,8 @@ function HomePage() {
       <section id="projects" className="portfolio-section">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="section-head gallery-section-head">
-            <div><p className="section-kicker">Selected projects / 01 — {String(projects.length).padStart(2, "0")}</p><h2 className="section-title">项目展廊</h2></div>
-            <p>Agent、智能系统与企业工作流的实践。</p>
+            <div><p className="section-kicker">Selected projects</p><h2 className="section-title">项目展廊</h2></div>
+            <p>Agent智能系统与企业工作流实践</p>
           </div>
           <div
             className="project-gallery"
@@ -653,7 +656,6 @@ function HomePage() {
               <p className="section-kicker">Learning Notes</p>
               <h2 className="section-title">学习笔记</h2>
             </div>
-            <p className="section-aside">从书脊抽出笔记，翻看我对大模型、Agent、RAG 与系统工程的学习记录。</p>
           </div>
           <div className="notes-bookshelf" aria-label="学习笔记书架">
             <div className="shelf-decor" aria-hidden="true">{["#476c61", "#d6c8aa", "#6e7e70", "#744957", "#bba774"].map((color, index) => <span key={index} style={{ "--spine-color": color }} />)}</div>

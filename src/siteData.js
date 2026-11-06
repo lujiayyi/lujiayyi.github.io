@@ -17,14 +17,32 @@ export const siteMeta = {
     "NLP 与知识增强",
     "Control · Systems"
   ],
-  experience: {
-    period: "2025.6 - 2025.9",
-    company: "一万伏特（上海）信息科技有限公司｜大模型算法实习生",
-    paragraphs: [
-      "参与 40 万条心理咨询对话数据的收集、清洗、脱敏、增强与质量检测，整理为 Alpaca、ShareGPT 等标准训练格式；使用 LlamaFactory 对 Qwen3-32B 与 Qwen2.5-72B 进行 SFT 微调，并参与评测、推理部署与回复质量优化。",
-      "同时基于 Dify 与 LangChain 构建多 Agent 心理咨询系统，设计 Router Agent、Information Agent、Diagnosis Agent、Recommendation Agent 协作架构，维护专业知识库与长期/短期记忆机制，并使用 Vue.js 完成交互界面、历史记录与 Agent 分析可视化开发。"
-    ]
-  }
+  experiences: [
+    {
+      period: "2025.6 - 2025.9",
+      company: "一万伏特（上海）信息科技有限公司",
+      role: "大模型算法实习生",
+      paragraphs: [
+        "40 万条心理咨询对话数据的收集、脱敏与增强，整理为 Alpaca、ShareGPT 等标准训练格式；",
+        "使用 LlamaFactory 对 Qwen3-32B 与 Qwen2.5-72B 微调，并参与评测、推理部署与回复质量优化。",
+        "基于 Dify /LangChain 构建多 Agent 心理咨询系统，设计 Router 、Information、Diagnosis、Recommendation Agent 协作架构，",
+        "维护专业知识库与长短期记忆机制，并使用 Vue.js 完成交互界面可视化开发。"
+      ]
+    },
+    {
+      period: "2026.7–至今",
+      company: "博世（中国）投资有限公司 Bosch (China) Investment Ltd.",
+      role: "AI 开发实习生",
+      project: {
+        description: "设计基于 FastAPI、LangGraph 与 RAG 的企业级 IT Service Copilot，构建覆盖工单校验、智能分派、知识检索、证据驱动诊断及人工审核的标准化处理流程。引入风险门禁、Docupedia 知识闭环与服务质量分析机制，提升工单处理效率、诊断可信度及企业知识复用能力。"
+      }
+    },
+    {
+      period: "至今",
+      company: "安永（中国）企业咨询有限公司",
+      role: "TRDA AI实习生"
+    }
+  ]
 };
 
 export const projects = [
