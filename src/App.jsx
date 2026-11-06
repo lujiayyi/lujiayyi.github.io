@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Link,
   Navigate,
@@ -11,6 +12,7 @@ import {
 } from "react-router-dom";
 import { assets } from "./assets";
 import { notes, projects, siteMeta } from "./siteData";
+import { travelPlaces } from "./travelData";
 
 function MercuryBackground() {
   const canvasRef = useRef(null);
@@ -211,6 +213,100 @@ function Navigation() {
         </div>
       </div>
     </nav>
+  );
+}
+
+function TravelGallery() {
+  const stageRef = useRef(null);
+  const closeRef = useRef(null);
+  const [viewer, setViewer] = useState(null);
+  const place = viewer === null ? null : travelPlaces[viewer.placeIndex];
+  const photoLayout = [
+    { column: "2 / span 2", offset: "0px", ratio: ".72" },
+    { column: "6 / span 3", offset: "55px", ratio: ".78" },
+    { column: "10 / span 3", offset: "125px", ratio: "1.08" },
+    { column: "1 / span 2", offset: "0px", ratio: ".72" },
+    { column: "3 / span 5", offset: "175px", ratio: "1.55" },
+    { column: "9 / span 3", offset: "85px", ratio: ".78" }
+  ];
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const rect = stage.getBoundingClientRect();
+      const progress = Math.max(-1, Math.min(1, (window.innerHeight * .55 - rect.top - rect.height / 2) / window.innerHeight));
+      stage.querySelectorAll(".travel-place").forEach((card, index) => {
+        card.style.setProperty("--travel-shift", `${Math.round(progress * [-48, 54, -64][index])}px`);
+      });
+    };
+    const requestUpdate = () => { if (!frame) frame = window.requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (viewer === null) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setViewer(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [viewer === null]);
+
+  return (
+    <section id="travel" className="travel-section" aria-labelledby="travel-heading">
+      <div className="travel-inner mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="travel-heading">
+          <p className="section-kicker">Places / 01 — 03</p>
+          <h2 id="travel-heading">沿途<span>所见</span></h2>
+          <p>在不同城市留下的照片。选择一个地点，继续翻看。</p>
+        </div>
+        <div className="travel-stage" ref={stageRef}>
+          {travelPlaces.map((destination, index) => (
+            <button
+              className={`travel-place travel-place-${index + 1}`}
+              type="button"
+              key={destination.slug}
+              onClick={() => setViewer({ placeIndex: index })}
+              aria-label={`查看${destination.chineseName}的${destination.photos.length}张照片`}
+            >
+              <span className="travel-place-visual">
+                <img className="travel-place-back" src={destination.detail} alt="" loading="lazy" />
+                <img className="travel-place-front" src={destination.cover} alt="" loading="lazy" />
+              </span>
+              <span className="travel-place-meta"><span>{String(index + 1).padStart(2, "0")} / {destination.country}</span><strong>{destination.name}</strong><span>{destination.chineseName} · {destination.photos.length} photos ↗</span></span>
+            </button>
+          ))}
+          <span className="travel-stage-note" aria-hidden="true">SCROLL TO WANDER / SELECT A PLACE TO ENTER</span>
+        </div>
+      </div>
+      {place && createPortal(
+        <div className="travel-viewer" role="dialog" aria-modal="true" aria-label={`${place.chineseName}旅行相册`}>
+          <div className="travel-viewer-top"><span>{place.name} <em>/</em> {place.country}</span><span>{String(place.photos.length).padStart(2, "0")} PHOTOGRAPHS</span><button ref={closeRef} type="button" onClick={() => setViewer(null)} aria-label="关闭相册">关闭 ×</button></div>
+          <div className="travel-viewer-gallery">
+            {place.photos.map((photo, index) => {
+              const layout = photoLayout[index % photoLayout.length];
+              return <figure className="travel-viewer-tile" key={photo} style={{ "--column": layout.column, "--row": Math.floor(index / photoLayout.length) * 2 + (index % photoLayout.length < 3 ? 1 : 2), "--offset": layout.offset, "--ratio": layout.ratio }}><img src={photo} alt={`${place.chineseName}旅行照片 ${index + 1}`} loading={index < 3 ? "eager" : "lazy"} /><figcaption>{String(index + 1).padStart(2, "0")} / {String(place.photos.length).padStart(2, "0")}</figcaption></figure>;
+            })}
+          </div>
+        </div>, document.body
+      )}
+    </section>
   );
 }
 
@@ -564,6 +660,7 @@ function HomePage() {
         </div>
       </section>
 
+      <TravelGallery />
       <section className="tools-section" aria-labelledby="tools-heading">
         <h2 id="tools-heading">TOOLS I WORK WITH</h2>
         <div className="tools-marquee tools-marquee-forward">{renderToolRow(toolsRows, "模型与检索工具")}</div>
