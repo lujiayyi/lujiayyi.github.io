@@ -9,8 +9,8 @@ export const travelPlaces = [
     name: "Roma",
     chineseName: "罗马",
     country: "Italy",
-    cover: "/travel/roma/roma-13.webp",
-    detail: "/travel/roma/roma-04.webp",
+    cover: "/travel/thumbs/roma-13.webp",
+    detail: "/travel/thumbs/roma-04.webp",
     photos: photos("roma", 14)
   },
   {
@@ -18,8 +18,8 @@ export const travelPlaces = [
     name: "Firenze",
     chineseName: "佛罗伦萨",
     country: "Italy",
-    cover: "/travel/florence/florence-10.webp",
-    detail: "/travel/florence/florence-01.webp",
+    cover: "/travel/thumbs/florence-10.webp",
+    detail: "/travel/thumbs/florence-01.webp",
     photos: photos("florence", 11)
   },
   {
@@ -27,8 +27,8 @@ export const travelPlaces = [
     name: "Sydney",
     chineseName: "悉尼",
     country: "Australia",
-    cover: "/travel/sydney/sydney-02.webp",
-    detail: "/travel/sydney/sydney-01.webp",
+    cover: "/travel/thumbs/sydney-02.webp",
+    detail: "/travel/thumbs/sydney-01.webp",
     photos: photos("sydney", 12)
   }
 ];

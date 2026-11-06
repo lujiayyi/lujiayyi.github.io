@@ -218,6 +218,7 @@ function Navigation() {
 
 function TravelGallery() {
   const stageRef = useRef(null);
+  const viewerRef = useRef(null);
   const closeRef = useRef(null);
   const [viewer, setViewer] = useState(null);
   const place = viewer === null ? null : travelPlaces[viewer.placeIndex];
@@ -268,6 +269,26 @@ function TravelGallery() {
     };
   }, [viewer === null]);
 
+  useEffect(() => {
+    const root = viewerRef.current;
+    if (!root) return;
+    const images = root.querySelectorAll("img[data-src]");
+    if (!("IntersectionObserver" in window)) {
+      images.forEach((image) => { image.src = image.dataset.src; });
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const image = entry.target;
+        image.src = image.dataset.src;
+        observer.unobserve(image);
+      });
+    }, { root, rootMargin: "700px 0px" });
+    images.forEach((image) => observer.observe(image));
+    return () => observer.disconnect();
+  }, [place?.slug]);
+
   return (
     <section id="travel" className="travel-section" aria-labelledby="travel-heading">
       <div className="travel-inner mx-auto max-w-7xl px-6 lg:px-10">
@@ -286,8 +307,8 @@ function TravelGallery() {
               aria-label={`查看${destination.chineseName}的${destination.photos.length}张照片`}
             >
               <span className="travel-place-visual">
-                <img className="travel-place-back" src={destination.detail} alt="" loading="lazy" />
-                <img className="travel-place-front" src={destination.cover} alt="" loading="lazy" />
+                <img className="travel-place-back" src={destination.detail} alt="" decoding="async" />
+                <img className="travel-place-front" src={destination.cover} alt="" decoding="async" />
               </span>
               <span className="travel-place-meta"><span>{String(index + 1).padStart(2, "0")} / {destination.country}</span><strong>{destination.name}</strong><span>{destination.chineseName} · {destination.photos.length} photos ↗</span></span>
             </button>
@@ -296,12 +317,12 @@ function TravelGallery() {
         </div>
       </div>
       {place && createPortal(
-        <div className="travel-viewer" role="dialog" aria-modal="true" aria-label={`${place.chineseName}旅行相册`}>
+        <div className="travel-viewer" ref={viewerRef} role="dialog" aria-modal="true" aria-label={`${place.chineseName}旅行相册`}>
           <div className="travel-viewer-top"><span>{place.name} <em>/</em> {place.country}</span><span>{String(place.photos.length).padStart(2, "0")} PHOTOGRAPHS</span><button ref={closeRef} type="button" onClick={() => setViewer(null)} aria-label="关闭相册">关闭 ×</button></div>
           <div className="travel-viewer-gallery">
             {place.photos.map((photo, index) => {
               const layout = photoLayout[index % photoLayout.length];
-              return <figure className="travel-viewer-tile" key={photo} style={{ "--column": layout.column, "--row": Math.floor(index / photoLayout.length) * 2 + (index % photoLayout.length < 3 ? 1 : 2), "--offset": layout.offset, "--ratio": layout.ratio }}><img src={photo} alt={`${place.chineseName}旅行照片 ${index + 1}`} loading={index < 3 ? "eager" : "lazy"} /><figcaption>{String(index + 1).padStart(2, "0")} / {String(place.photos.length).padStart(2, "0")}</figcaption></figure>;
+              return <figure className="travel-viewer-tile" key={photo} style={{ "--column": layout.column, "--row": Math.floor(index / photoLayout.length) * 2 + (index % photoLayout.length < 3 ? 1 : 2), "--offset": layout.offset, "--ratio": layout.ratio }}><img src={index < 3 ? photo : undefined} data-src={index < 3 ? undefined : photo} alt={`${place.chineseName}旅行照片 ${index + 1}`} decoding="async" /><figcaption>{String(index + 1).padStart(2, "0")} / {String(place.photos.length).padStart(2, "0")}</figcaption></figure>;
             })}
           </div>
         </div>, document.body
@@ -522,7 +543,7 @@ function HomePage() {
   return (
     <main id="home">
       <section className="hero-shell">
-        <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center justify-center px-6 pb-14 pt-20 lg:px-10">
+        <div className="hero-inner mx-auto flex max-w-6xl items-center justify-center px-6 pb-14 pt-20 lg:px-10">
           <div className="hero-copy hero-copy-centered">
             <p className="eyebrow">LLM · AI AGENT · RAG · VLM · CONTROL · SYSTEMS</p>
             <div className="hero-portrait-shell">
