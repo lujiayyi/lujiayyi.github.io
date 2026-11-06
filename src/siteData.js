@@ -3,7 +3,7 @@ import { assets } from "./assets";
 export const siteMeta = {
   contact: "lu_jiayi@shu.edu.cn · 13681684365",
   profile:
-    "陆佳艺 · Jiayi Lu，上海大学人工智能专业本科生，大三。关注 LLM、AI Agent、RAG、AI 驱动的软件工程，持续围绕检索、推理、验证与部署构建可落地的智能系统。",
+    "陆佳艺 · Jiayi Lu，上海大学人工智能专业本科生，大三。关注 LLM、AI 驱动的软件工程，构建可落地的智能系统。",
   education: [
     "Shanghai University · AI",
     "GPA 3.61 · Top 15%",
