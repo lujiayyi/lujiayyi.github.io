@@ -217,6 +217,10 @@ function Navigation() {
 function HomePage() {
   const [searchParams] = useSearchParams();
   const galleryRef = useRef(null);
+  const touchStartX = useRef(null);
+  const suppressGalleryClick = useRef(false);
+  const mobileGalleryPhase = useRef({ value: 0, target: null });
+  const [activeProject, setActiveProject] = useState(0);
   const [openBook, setOpenBook] = useState(() => window.matchMedia("(max-width: 820px)").matches ? notes[0]?.slug : notes[2]?.slug);
   const toolsRows = [
     ["QoderWake", "#f3f3f3", "/tool-icons/qoderwake.svg"],
@@ -275,16 +279,47 @@ function HomePage() {
     if (!gallery) return;
     const cards = [...gallery.querySelectorAll(".gallery-project")];
     const narrow = window.matchMedia("(max-width: 820px)");
+    const phonePortrait = window.matchMedia("(max-width: 600px) and (orientation: portrait)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frameId = 0;
     let startedAt = performance.now();
     let pausedAt = null;
     let pauseDuration = 0;
     let activeCard = null;
+    let lastMobileFrame = null;
+
+    function drawMobile(now, singleFrame = false) {
+      const elapsed = lastMobileFrame === null ? 0 : Math.min(now - lastMobileFrame, 64);
+      lastMobileFrame = now;
+      const target = mobileGalleryPhase.current.target;
+      if (target !== null) {
+        const remaining = target - mobileGalleryPhase.current.value;
+        mobileGalleryPhase.current.value += remaining * (1 - Math.exp(-elapsed / 230));
+        if (Math.abs(remaining) < 0.005) {
+          mobileGalleryPhase.current.value = target;
+          mobileGalleryPhase.current.target = null;
+        }
+      } else {
+        mobileGalleryPhase.current.value += elapsed / 6500;
+      }
+      const phase = mobileGalleryPhase.current.value;
+      const cardWidth = cards[0]?.offsetWidth || 255;
+      const centerX = (gallery.clientWidth - cardWidth) / 2;
+      cards.forEach((card, index) => {
+        const distance = ((index - phase + cards.length * 100 + cards.length / 2) % cards.length) - cards.length / 2;
+        const depth = Math.abs(distance);
+        card.style.transform = `translate3d(${centerX + distance * cardWidth * 0.63}px, ${12 + depth * 52}px, 0) scale(${1 - depth * 0.12}) rotate(${distance * 3}deg)`;
+        card.style.opacity = String(Math.max(0, Math.min(1, 3 - depth)));
+        card.style.zIndex = String(10 - Math.round(depth));
+        card.style.pointerEvents = depth > 2.5 ? "none" : "auto";
+        card.style.visibility = depth > 3 ? "hidden" : "visible";
+      });
+      if (!singleFrame) frameId = window.requestAnimationFrame(drawMobile);
+    }
 
     function draw(now) {
       const time = pausedAt ?? now;
-      const cycle = 30000;
+      const cycle = 45000;
       const travel = ((time - startedAt - pauseDuration) % cycle + cycle) % cycle / cycle;
       const width = gallery.clientWidth;
       cards.forEach((card, index) => {
@@ -314,15 +349,41 @@ function HomePage() {
 
     function syncMotion() {
       window.cancelAnimationFrame(frameId);
+      if (phonePortrait.matches) {
+        gallery.classList.remove("is-motion-ready");
+        gallery.classList.add("is-mobile-stack");
+        const phase = mobileGalleryPhase.current.value;
+        const currentIndex = ((Math.round(phase) % cards.length) + cards.length) % cards.length;
+        if (currentIndex !== activeProject) {
+          let difference = activeProject - currentIndex;
+          if (difference > cards.length / 2) difference -= cards.length;
+          if (difference < -cards.length / 2) difference += cards.length;
+          mobileGalleryPhase.current.target = Math.round(phase) + difference;
+        }
+        if (!reduced.matches) frameId = window.requestAnimationFrame(drawMobile);
+        else {
+          mobileGalleryPhase.current.value = mobileGalleryPhase.current.target ?? activeProject;
+          mobileGalleryPhase.current.target = null;
+          drawMobile(performance.now(), true);
+        }
+        return;
+      }
+      gallery.classList.remove("is-mobile-stack");
       if (narrow.matches || reduced.matches) {
         gallery.classList.remove("is-motion-ready");
         cards.forEach((card) => {
           card.style.transform = "";
           card.style.opacity = "";
           card.style.zIndex = "";
+          card.style.pointerEvents = "";
+          card.style.visibility = "";
         });
         return;
       }
+      cards.forEach((card) => {
+        card.style.pointerEvents = "";
+        card.style.visibility = "";
+      });
       startedAt = performance.now();
       pauseDuration = 0;
       pausedAt = null;
@@ -345,11 +406,13 @@ function HomePage() {
       card.addEventListener("blur", resume);
     });
     narrow.addEventListener("change", syncMotion);
+    phonePortrait.addEventListener("change", syncMotion);
     reduced.addEventListener("change", syncMotion);
     syncMotion();
     return () => {
       window.cancelAnimationFrame(frameId);
       narrow.removeEventListener("change", syncMotion);
+      phonePortrait.removeEventListener("change", syncMotion);
       reduced.removeEventListener("change", syncMotion);
       cards.forEach((card) => {
         card.removeEventListener("pointerenter", highlight);
@@ -358,7 +421,7 @@ function HomePage() {
         card.removeEventListener("blur", resume);
       });
     };
-  }, []);
+  }, [activeProject]);
 
   return (
     <main id="home">
@@ -417,18 +480,48 @@ function HomePage() {
             <div><p className="section-kicker">Selected projects / 01 — {String(projects.length).padStart(2, "0")}</p><h2 className="section-title">项目展廊</h2></div>
             <p>Agent、智能系统与企业工作流的实践。</p>
           </div>
-          <div className="project-gallery" ref={galleryRef}>
+          <div
+            className="project-gallery"
+            ref={galleryRef}
+            onTouchStart={(event) => { touchStartX.current = event.touches[0]?.clientX ?? null; }}
+            onTouchEnd={(event) => {
+              if (!window.matchMedia("(max-width: 600px) and (orientation: portrait)").matches || touchStartX.current === null) return;
+              const distance = event.changedTouches[0].clientX - touchStartX.current;
+              touchStartX.current = null;
+              if (Math.abs(distance) < 40) return;
+              suppressGalleryClick.current = true;
+              window.setTimeout(() => { suppressGalleryClick.current = false; }, 400);
+              const centered = Math.round(mobileGalleryPhase.current.value ?? activeProject);
+              mobileGalleryPhase.current.target = centered + (distance < 0 ? 1 : -1);
+              setActiveProject(((centered + (distance < 0 ? 1 : -1)) % projects.length + projects.length) % projects.length);
+            }}
+          >
             <div className="project-gallery-track">
               {projects.map((project, index) => (
                 <Link
                   key={project.slug}
                   to={`/project/${project.slug}`}
                   className={`gallery-project gallery-project-${index + 1}`}
+                  onClick={(event) => {
+                    if (suppressGalleryClick.current) {
+                      event.preventDefault();
+                      suppressGalleryClick.current = false;
+                    } else if (window.matchMedia("(max-width: 600px) and (orientation: portrait)").matches && index !== ((Math.round(mobileGalleryPhase.current.value ?? activeProject) % projects.length) + projects.length) % projects.length) {
+                      event.preventDefault();
+                      const phase = mobileGalleryPhase.current.value ?? activeProject;
+                      const centered = Math.round(phase);
+                      let difference = index - (((centered % projects.length) + projects.length) % projects.length);
+                      if (difference > projects.length / 2) difference -= projects.length;
+                      if (difference < -projects.length / 2) difference += projects.length;
+                      mobileGalleryPhase.current.target = centered + difference;
+                      setActiveProject(index);
+                    }
+                  }}
                 >
                   <div className="gallery-project-cover">
-                    <span className="gallery-cover-top">JIAYI LU <span>PROJECT {String(index + 1).padStart(2, "0")}</span></span>
+                    <span className="gallery-cover-top"><span>{project.galleryLabel}</span><span>PROJECT {String(index + 1).padStart(2, "0")}</span></span>
                     <span className="gallery-project-media"><img src={project.image} alt="" /></span>
-                    <span className="gallery-project-foot"><span>{project.tags[0]}</span><strong>{project.title}</strong><span className="gallery-project-open">查看项目 ↗</span></span>
+                    <span className="gallery-project-foot"><strong>{project.title}</strong><span className="gallery-project-open">Read ↗</span></span>
                   </div>
                 </Link>
               ))}

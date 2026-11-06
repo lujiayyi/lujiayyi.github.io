@@ -30,6 +30,7 @@ export const siteMeta = {
 export const projects = [
   {
     slug: "counseling-agent",
+    galleryLabel: "Qwen3-32B",
     index: "01 / COUNSELING AGENT",
     title: "心理咨询多 Agent 系统",
     summary:
@@ -67,6 +68,7 @@ export const projects = [
   },
   {
     slug: "foultrackai",
+    galleryLabel: "Video AI",
     index: "02 / FOULTRACKAI",
     title: "FOULTRACKAI 智能足球裁判",
     summary:
@@ -113,6 +115,7 @@ export const projects = [
   },
   {
     slug: "maar-agent",
+    galleryLabel: "Multimodal RAG",
     index: "03 / MAAR-AGENT",
     title: "多源增强多模态 RAG 系统",
     summary:
@@ -151,6 +154,7 @@ export const projects = [
   },
   {
     slug: "medical-rag",
+    galleryLabel: "Milvus Lite",
     index: "04 / MEDICAL RAG SYSTEM",
     title: "医疗知识库 RAG 系统",
     summary:
@@ -191,6 +195,7 @@ export const projects = [
   },
   {
     slug: "bosch-planning-dashboard",
+    galleryLabel: "Vue 3",
     index: "05 / PLANNING BOARD",
     title: "Planning Board 资源规划看板",
     summary: "面向团队需求、人员与容量规划的内部工作台。通过统一的需求管理、可用容量计算和年度汇总，把分散的排期数据转化为可查看、可调整的规划视图。",
@@ -217,6 +222,7 @@ export const projects = [
   },
   {
     slug: "bosch-esm-copilot",
+    galleryLabel: "LangGraph",
     index: "06 / ESM COPILOT",
     title: "ESM 工单 Copilot",
     summary: "面向 SAP 财务工单的工程师辅助处理系统。使用 LangGraph 串联工单标准化、分类提取、规则分流、知识检索、值班专家查询与邮件草稿，并保留人工审核入口。",
@@ -244,6 +250,7 @@ export const projects = [
   },
   {
     slug: "bosch-sap-testpilot",
+    galleryLabel: "Documind",
     index: "07 / SAP TESTPILOT AI",
     title: "SAP TestPilot AI 自动化验证",
     summary: "围绕 SAP 财务回归测试的自动化演示：上层 Agent 选择受限工具，底层脚本执行确定性的 WebGUI 表查询，结果经类型校验后保存为可追溯的结构化记录。",
