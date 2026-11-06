@@ -295,7 +295,6 @@ function TravelGallery() {
         <div className="travel-heading">
           <p className="section-kicker">Places / 01 — 03</p>
           <h2 id="travel-heading">沿途<span>所见</span></h2>
-          <p>在不同城市留下的照片。选择一个地点，继续翻看。</p>
         </div>
         <div className="travel-stage" ref={stageRef}>
           {travelPlaces.map((destination, index) => (
